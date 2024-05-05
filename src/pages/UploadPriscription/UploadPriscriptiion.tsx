@@ -1,6 +1,8 @@
 import React from "react";
-import { Button, Row, Col, Flex } from 'antd'; 
-import { PateintDashboard } from "../../components/Dashboards/PateintDashboard";
+import { Button, Row, Col, Flex,Select } from 'antd'; 
+
+
+const { Option } = Select;
 const style: React.CSSProperties = { background: '#0092ff', padding: '8px 0' };
 
 interface UploadPriscriptionProps {
@@ -10,39 +12,39 @@ interface UploadPriscriptionProps {
 export const UploadPriscription: React.FC<UploadPriscriptionProps> = () => {
   return (
 <>
-<Flex vertical gap="large" style={{ width: '50%' }}>
-    <Button type="primary" block>
-      UPLOAD PRESCRPTION
-    </Button>
-    <Button type="primary" block>
-      Primary
-    </Button>
-    <Button type="primary" block>
-      Primary
-    </Button>
-    
-  </Flex>
+
+<div className="upload-prescription-container" style={{ display: 'flex', alignItems: 'center' }}>
+  <div style={{ width: '50%' }}>
+  <div className="dropdown-button-container" style={{ border: '1px solid #d9d9d9', borderRadius: '10px',padding:'20px' }}>
+        <Select defaultValue="Location" style={{ width: '50%' }}>
+          <Option value="location1">Location 1</Option>
+          <Option value="location2">Location 2</Option>
+          <Option value="location3">Location 3</Option>
+        </Select>
+        <Button type="primary" style={{ marginLeft: '5%' }}>SELECT LOCATION</Button>
+        </div>
+
+      <Flex vertical gap="large" style={{ marginTop:'20%' }}>
+        <Button type="primary" block>
+          UPLOAD PRESCRIPTION
+        </Button>
+        <Button type="primary" block>
+          INQUIRE MEDICINE
+        </Button>
+        <Button type="primary" block>
+          CHECK AVAILABILITY
+        </Button>
+      </Flex>
+  </div>
+      <div style={{ width: '50%' }}>
+        <img src="../../assets/uploadimage.jpg" alt="Prescription Image" style={{ width: '100%', borderRadius: '10px' }} />
+      </div>
+    </div>
+
+
    
 </>
 
-
-    
-    // <div className="upload-prescription-container">
-    //   <Row gutter={[16, 16]} align="middle">
-    //     <Col flex="auto">
-    //       <div className="button-side">
-    //         <Button block type="primary">Upload Prescription</Button>
-    //         <Button block>Inquire Medicine</Button>
-    //         <Button block>Check Availability</Button>
-    //       </div>
-    //     </Col>
-    //     <Col>
-    //       <div className="image-side">
-    //         <img src="path/to/your/image.jpg" alt="Prescription Image" style={{ maxWidth: '100%' }} />
-    //       </div>
-    //     </Col>
-    //   </Row>
-    // </div>
     
    
   );

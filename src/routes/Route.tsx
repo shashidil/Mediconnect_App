@@ -8,6 +8,9 @@ import {UserRegistration} from "../pages/Users/UserRegistration";
 import { PateintDashboard } from "../components/Dashboards/PateintDashboard";
 import { PhamacistDashboard } from "../components/Dashboards/PhamacistDashboard";
 import { UploadPriscription } from "../pages/UploadPriscription/UploadPriscriptiion";
+import { Responses } from "../pages/Responses/Responses";
+import { UserLogin } from "../pages/Users/UserLogin";
+
 
 
 export const ROUTES = createBrowserRouter([
@@ -22,6 +25,10 @@ export const ROUTES = createBrowserRouter([
     {
         path: "/signup",
         element:<UserRegistration/>
+    },
+    {
+        path: "/signin",
+        element:<UserLogin/>
     },
     {
         path: "/",
@@ -48,9 +55,16 @@ export const ROUTES = createBrowserRouter([
         element:<PateintDashboard/>,
         children:[
             {
-                path: "",
+                path: "upload",
                 index: true,
                 element:<UploadPriscription/>
+            },
+
+            {
+                path: "response",
+                index: true,
+                element:<Responses/>
+
             },
         ]
     },
