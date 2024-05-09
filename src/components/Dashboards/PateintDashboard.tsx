@@ -26,14 +26,16 @@ function getItem(
   
     getItem('Home', 'grp', null, [
       getItem('Overview', '1',<MenuUnfoldOutlined />), 
-      getItem('Response', '2',<MailOutlined />),
-      getItem('Orders', '3',<GiftOutlined />),
-      getItem('Chats', '4',<MessageOutlined />),
-      getItem('Tracking', '5',<TruckOutlined />)], 'group'),
+      getItem('Analytics', '2',<MailOutlined />),
+      getItem('Payments', '3',<GiftOutlined />),
+      getItem('Orders', '4',<MessageOutlined />),
+      getItem('Reports', '5',<MessageOutlined />),
+      getItem('Requests', '6',<MessageOutlined />)], 'group'),
+      // getItem('Tracking', '7',<TruckOutlined />)
 
-    getItem('Account', 'grp', null, [
-      getItem('Setting', '1',<SettingOutlined/>), 
-      getItem('Logout', '2',<LoginOutlined />),], 'group'),
+    getItem('ACCOUNT', 'grp', null, [
+      getItem('Settings', '1',<SettingOutlined/>), 
+      getItem('Logouts', '2',<LoginOutlined />),], 'group'),
 
   ];
  

@@ -48,14 +48,14 @@ export const PhamacistDashboard = () =>{
         <>
         <NavBar logoSrc="hjhh" appName="MediConnect" userName="User" profilePhotoSrc="gjhj" />
  
- <Menu
-   onClick={onClick}
-   style={{ width: 256}}
-   defaultSelectedKeys={['1']}
-   defaultOpenKeys={['sub1']}
-   mode="inline"
-   items={items}
- />
+      <Menu
+        onClick={onClick}
+        style={{ width: 256}}
+        defaultSelectedKeys={['1']}
+        defaultOpenKeys={['sub1']}
+        mode="inline"
+        items={items}
+      />
  </>
     
     )

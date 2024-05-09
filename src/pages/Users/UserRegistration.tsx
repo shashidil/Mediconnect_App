@@ -3,6 +3,8 @@ import {useState} from "react";
 import { UserOutlined, PhoneOutlined, ShopOutlined, NumberOutlined, EnvironmentOutlined ,EyeInvisibleOutlined, EyeTwoTone} from '@ant-design/icons';
 import { registerUser } from "../../services/api/UserAuthApi";
 import { SignupDto } from "../../Interfaces/signupDto";
+import signIn from "../../assets/signin.png";
+import medicarePharmacist from "../../assets/medicarePharmacist.png";
 
 const { TabPane } = Tabs;
 
@@ -84,204 +86,217 @@ const handleError = (error: any) => {
 
 
 
-
     return(
         <>
-      <Tabs defaultActiveKey="1" type="card">
-            <TabPane tab="AS A PATIENT" key="1">
-                <Row gutter={16} justify="center">
-                    <Col span={12}>
-                        <Form
-                            form={form}
-                            onFinish={handlePatientFormSubmit}
-                            labelCol={{ span: 6 }}
-                            wrapperCol={{ span: 14, offset: 6 }}
-                            layout="horizontal"
-                            initialValues={signupDto.patientRequest}
-                        >
-                            <Form.Item name="activeTab" initialValue="1" hidden />
-                            <Form.Item
-                                name="username"
-                                rules={[{ required: true, message: 'Please enter your username' }]}
+            <div style={{width:'1200px', margin:'0 auto',padding:'60px 0'}}>
+                <Tabs defaultActiveKey="1">
+                    <TabPane tab="As a Customer" key="1">
+                        <Row gutter={16} justify="center">
+                            <Col span={10}>
+                                <Form
+                                    form={form}
+                                    onFinish={handlePatientFormSubmit}
+                                    labelCol={{ span: 6 }}
+                                    wrapperCol={{ span: 14, offset: 6 }}
+                                    layout="horizontal"
+                                    initialValues={signupDto.patientRequest}
+                                >
+                                <Form.Item name="activeTab" initialValue="1" hidden />
+                                <Form.Item
+                                    name="firstName"
+                                    rules={[{ required: true, message: 'Please enter your First Name' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="First Name" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="lastName"
+                                    rules={[{ required: true, message: 'Please enter your Last name' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Last Name" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="address"
+                                    rules={[{ required: true, message: 'Please enter your Address' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Address" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="address1"
+                                    rules={[{ required: true, message: 'Please enter your Address1' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Address Line 1" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="city"
+                                    rules={[{ required: true, message: 'Please enter your city' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="City" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="postalcode"
+                                    rules={[{ required: true, message: 'Please enter your postalcode' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Postal Code" />
+                                </Form.Item>
+                                {/* <Form.Item  name="password" initialValue="" rules={[{ required: true, message: 'Please enter your password' }]}>
+                                <Input.Password style={{padding:'10px',left:'-120px' }} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} placeholder="Enter your password" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="confirmPassword"
+                                    initialValue=""
+                                    dependencies={['password']}
+                                    rules={[
+                                    { required: true, message: 'Please confirm your password' },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                        if (!value || getFieldValue('password') === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error('The two passwords do not match'));
+                                        },
+                                    }), 
+                                    ]}
+                                >
+                                <Input.Password style={{padding:'10px',left:'-120px' }} placeholder="Enter Confirm password" />
+                                </Form.Item> */}
+                                <Form.Item
+                                    name="phoneNumber"
+                                    rules={[{ required: true, message: 'Please enter your phone number' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<PhoneOutlined />} placeholder="Phone" />
+                                </Form.Item>
+                                {/* <Form.Item
+                                    name="addressLine1"
+                                    rules={[{ required: true, message: 'Please enter your address' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Enter your address" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="city"
+                                    rules={[{ required: true, message: 'Please enter your city' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Enter your city" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="postalCode"
+                                    rules={[{ required: true, message: 'Please enter your postal code' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Enter your postal code" />
+                                </Form.Item> */}
+                                <Form.Item wrapperCol={{ offset: 6, span: 14 }}>
+                                    <Button style={{background:'#2e384d',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'20px',left:'-120px'}} type="primary" htmlType="submit">
+                                        SIGNUP
+                                    </Button>
+                                </Form.Item>
+                                </Form>
+                            </Col>
+                            <Col span={14}>
+                                <img src={signIn} alt="Image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                            </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane tab="As a Pharmacist" key="2">
+                        <Row gutter={16} justify="center">
+                            <Col span={10}>
+                                <Form
+                                    form={form}
+                                    onFinish={handlePharmacistFormSubmit}
+                                    labelCol={{ span: 6 }}
+                                    wrapperCol={{ span: 14, offset: 6 }}
+                                    layout="horizontal"
+                                    initialValues={signupDto.pharmacistRequest}
+                                >
+                                <Form.Item name="activeTab" initialValue="2" hidden />
+                                <Form.Item
+                                    name="pharmacyName"
+                                    rules={[{ required: true, message: 'Please enter your pharmacy Name' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Pharmacy Name" />
+                                </Form.Item>
+                                {/* <Form.Item  name="password" initialValue="" rules={[{ required: true, message: 'Please enter your password' }]}>
+                                <Input.Password style={{padding:'10px',left:'-120px' }} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} placeholder="Enter your password" />
+                                </Form.Item>
+                                <Form.Item
                                 
-                        
-                            >
-                                <Input prefix={<UserOutlined />} placeholder="Enter your username" />
-                            </Form.Item>
-                            <Form.Item
-                                name="firstName"
-                                rules={[{ required: true, message: 'Please enter your first name' }]}
-                            >
-                                <Input prefix={<UserOutlined />} placeholder="Enter your first name" />
-                            </Form.Item>
-                            <Form.Item
-                                name="lastName"
-                                rules={[{ required: true, message: 'Please enter your last name' }]}
-                            >
-                                <Input prefix={<UserOutlined />} placeholder="Enter your last name" />
-                            </Form.Item>
-                            <Form.Item
-                                name="email"
-                                rules={[{ required: true, message: 'Please enter your email' }]}
-                            >
-                                <Input prefix={<UserOutlined />} placeholder="Enter your email" />
-                            </Form.Item>
-                            <Form.Item  name="password" initialValue="" rules={[{ required: true, message: 'Please enter your password' }]}>
-                              <Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} placeholder="Enter your password" />
-                            </Form.Item>
-                            <Form.Item
-          
-                                name="confirmPassword"
-                                initialValue=""
-                                dependencies={['password']}
-                                rules={[
-                                  { required: true, message: 'Please confirm your password' },
-                                  ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                      if (!value || getFieldValue('password') === value) {
-                                        return Promise.resolve();
-                                      }
-                                      return Promise.reject(new Error('The two passwords do not match'));
-                                    },
-                                  }), 
-                                ]}
-          >
-                              <Input.Password placeholder="Enter Confirm password" />
-                            </Form.Item>
-                            <Form.Item
-                                name="phoneNumber"
-                                rules={[{ required: true, message: 'Please enter your phone number' }]}
-                            >
-                                <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" />
-                            </Form.Item>
-                            <Form.Item
-                                name="addressLine1"
-                                rules={[{ required: true, message: 'Please enter your address' }]}
-                            >
-                                <Input prefix={<EnvironmentOutlined />} placeholder="Enter your address" />
-                            </Form.Item>
-                            <Form.Item
-                                name="city"
-                                rules={[{ required: true, message: 'Please enter your city' }]}
-                            >
-                                <Input prefix={<EnvironmentOutlined />} placeholder="Enter your city" />
-                            </Form.Item>
-                            <Form.Item
-                                name="postalCode"
-                                rules={[{ required: true, message: 'Please enter your postal code' }]}
-                            >
-                                <Input prefix={<EnvironmentOutlined />} placeholder="Enter your postal code" />
-                            </Form.Item>
-                            <Form.Item wrapperCol={{ offset: 6, span: 14 }}>
-                                <Button type="primary" htmlType="submit">
+                                    name="confirmPassword"
+                                    initialValue=""
+                                    dependencies={['password']}
+                                    rules={[
+                                    { required: true, message: 'Please confirm your password' },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                        if (!value || getFieldValue('password') === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error('The two passwords do not match'));
+                                        },
+                                    }),
+                                    ]}
+                                >
+                                <Input.Password style={{padding:'10px',left:'-120px' }} placeholder="Enter Confirm password" />
+                                </Form.Item> */}
+                                <Form.Item
+                                    name="pharmacyRegNo"
+                                    rules={[{ required: true, message: 'Please enter your pharmacy RegNo' }]}
+                                >
+                                    <Input style={{padding:'10px',left:'-120px' }} prefix={<PhoneOutlined />} placeholder="Pharmacy Registration No" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="address"
+                                    rules={[{ required: true, message: 'Please enter your Address' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Address" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="address1"
+                                    rules={[{ required: true, message: 'Please enter your Address1' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Address Line 1" />
+                                </Form.Item>
+                                {/* <Form.Item
+                                    name="regNumber"
+                                    rules={[{ required: true, message: 'Please enter your registration number' }]}
+                                >
+                                    <Input style={{padding:'10px',left:'-120px' }} prefix={<NumberOutlined />} placeholder="Enter your registration number" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="addressLine1"
+                                    rules={[{ required: true, message: 'Please enter your address' }]}
+                                >
+                                    <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Enter your address" />
+                                </Form.Item> */}
+                                <Form.Item
+                                    name="city"
+                                    rules={[{ required: true, message: 'Please enter your city' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="City" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="postalcode"
+                                    rules={[{ required: true, message: 'Please enter your postalcode' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Postal Code" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="phoneNumber"
+                                    rules={[{ required: true, message: 'Please enter your phone number' }]}
+                                >
+                                <Input style={{padding:'10px',left:'-120px' }} prefix={<PhoneOutlined />} placeholder="Phone" />
+                                </Form.Item>
+                                <Form.Item wrapperCol={{ offset: 6, span: 14 }}>
+                                    <Button style={{background:'#2e384d',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'20px',left:'-120px'}} type="primary" htmlType="submit">
                                     SIGNUP
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </Col>
-                    <Col span={12}>
-                        <img src="" alt="Image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                    </Col>
-                </Row>
-            </TabPane>
-            <TabPane tab="AS A PHARMACIST" key="2">
-                <Row gutter={16} justify="center">
-                    <Col span={12}>
-                        <Form
-                            form={form}
-                            onFinish={handlePharmacistFormSubmit}
-                            labelCol={{ span: 6 }}
-                            wrapperCol={{ span: 14, offset: 6 }}
-                            layout="horizontal"
-                            initialValues={signupDto.pharmacistRequest}
-                        >
-                            <Form.Item name="activeTab" initialValue="2" hidden />
-                            <Form.Item
-                                name="email"
-                                rules={[{ required: true, message: 'Please enter your email' }]}
-                            >
-                                <Input prefix={<UserOutlined />} placeholder="Enter your email" />
-                            </Form.Item>
-                            <Form.Item  name="password" initialValue="" rules={[{ required: true, message: 'Please enter your password' }]}>
-                               <Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} placeholder="Enter your password" />
-                            </Form.Item>
-                            <Form.Item
-                              
-                                name="confirmPassword"
-                                initialValue=""
-                                dependencies={['password']}
-                                rules={[
-                                  { required: true, message: 'Please confirm your password' },
-                                  ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                      if (!value || getFieldValue('password') === value) {
-                                        return Promise.resolve();
-                                      }
-                                      return Promise.reject(new Error('The two passwords do not match'));
-                                    },
-                                  }),
-                                ]}
-          >
-                               <Input.Password placeholder="Enter Confirm password" />
-          </Form.Item>
-                            <Form.Item
-                                name="phoneNumber"
-                                rules={[{ required: true, message: 'Please enter your phone number' }]}
-                            >
-                                <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" />
-                            </Form.Item>
-                            <Form.Item
-                                name="pharmacyName"
-                                rules={[{ required: true, message: 'Please enter your pharmacy name' }]}
-                            >
-                                <Input prefix={<ShopOutlined />} placeholder="Enter your pharmacy name" />
-                            </Form.Item>
-                            <Form.Item
-                                name="regNumber"
-                                rules={[{ required: true, message: 'Please enter your registration number' }]}
-                            >
-                                <Input prefix={<NumberOutlined />} placeholder="Enter your registration number" />
-                            </Form.Item>
-                            <Form.Item
-                                name="addressLine1"
-                                rules={[{ required: true, message: 'Please enter your address' }]}
-                            >
-                                <Input prefix={<EnvironmentOutlined />} placeholder="Enter your address" />
-                            </Form.Item>
-                            <Form.Item
-                                name="city"
-                                rules={[{ required: true, message: 'Please enter your city' }]}
-                            >
-                                <Input prefix={<EnvironmentOutlined />} placeholder="Enter your city" />
-                            </Form.Item>
-                            <Form.Item
-                                name="states"
-                                rules={[{ required: true, message: 'Please enter your state' }]}
-                            >
-                                <Input prefix={<EnvironmentOutlined />} placeholder="Enter your state" />
-                            </Form.Item>
-                            <Form.Item
-                                name="postalCode"
-                                rules={[{ required: true, message: 'Please enter your postal code' }]}
-                            >
-                                <Input prefix={<EnvironmentOutlined />} placeholder="Enter your postal code" />
-                            </Form.Item>
-                            <Form.Item wrapperCol={{ offset: 6, span: 14 }}>
-                                <Button type="primary" htmlType="submit">
-                                    Submit
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </Col>
-                    <Col span={12}>
-                        <img src="" alt="Image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                    </Col>
-                </Row>
-            </TabPane>
-        </Tabs>
-    
-
-
+                                    </Button>
+                                </Form.Item>
+                                </Form>
+                            </Col>
+                            <Col span={14}>
+                                <img src={medicarePharmacist} alt="Image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                            </Col>
+                        </Row>
+                    </TabPane>
+                </Tabs>
+            </div>
         </>
     );
 };

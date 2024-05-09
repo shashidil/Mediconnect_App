@@ -10,7 +10,9 @@ import { PhamacistDashboard } from "../components/Dashboards/PhamacistDashboard"
 import { UploadPriscription } from "../pages/UploadPriscription/UploadPriscriptiion";
 import { Responses } from "../pages/Responses/Responses";
 import { UserLogin } from "../pages/Users/UserLogin";
-
+import Overview from './../pages/Overview/Overview';
+import Orders from "../pages/Orders/Orders";
+import Requests from "../pages/Requests/Requests";
 
 
 export const ROUTES = createBrowserRouter([
@@ -64,6 +66,27 @@ export const ROUTES = createBrowserRouter([
                 path: "response",
                 index: true,
                 element:<Responses/>
+
+            },
+
+            {
+                path: "overview",
+                index: true,
+                element:<Overview />
+
+            },
+
+            {
+                path: "orders",
+                index: true,
+                element:<Orders />
+
+            },
+
+            {
+                path: "requests",
+                index: true,
+                element:<Requests />
 
             },
         ]

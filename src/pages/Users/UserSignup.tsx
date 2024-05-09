@@ -17,7 +17,7 @@ export const UserSignup  = ()=>{
           style={{ maxWidth: 600 }}
           onFinish={handleFormSubmit}
           form={form}
-        >
+          >
           <Form.Item label="Name" name="Name" initialValue="" rules={[{ required: true, message: 'Please enter your name' }]}>
             <Input placeholder="Enter your name here" />
           </Form.Item>

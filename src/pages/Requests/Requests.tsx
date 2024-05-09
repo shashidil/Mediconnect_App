@@ -1,21 +1,23 @@
-import { ResponseCard, ResponseData } from "../../components/Card/ResponseCard"
-import logo from '../../assets/responses.png'
+import React from 'react'
+import { RequestCard, RequestData } from "../../components/Card/RequestCard"
 import Image from '../../assets/heart.png'
 
-const responsesData: ResponseData[] = [
+const responsesData: RequestData[] = [
     {
-        patientName: "John",
+        patientName: "J L S Dilshan",
         medicationName: "Medicine 1",
         medicationDosage: "10mg",
         medicationQuantity: 5,
         amount: 100,
-        additionalNotes: "Take after meal",
+        additionalNotes: "Nipun Lakshan",
         city: "Galle",
         distance: "2.5km",
         price: "1500 LKR",
+        drug: "panadol",
+        address: "312, galle labuduwa",
       },
       {
-        patientName: "Alice",
+        patientName: "Lakshan Madubhashika",
         medicationName: "Medicine 2",
         medicationDosage: "20mg",
         medicationQuantity: 3,
@@ -24,24 +26,28 @@ const responsesData: ResponseData[] = [
         city: "Kandy",
         distance: "1.5km",
         price: "2500 LKR",
+        drug: "Vitamin C",
+        address: "312, ABC kandy",
       },
      
 ]
-export const Responses:React.FC = ()=>{
 
-    return(
-        <>
-        <div style={{background: `url(${Image})`,backgroundRepeat:'no-repeat',backgroundSize:'cover',backgroundPositionX:'800px'}}>
+const Requests = () => {
+  return (
+    <>
+    <div style={{background: `url(${Image})`,backgroundRepeat:'no-repeat',backgroundSize:'cover',backgroundPositionX:'800px'}}>
         <div style={{ display: 'flex', gap: '20px' ,width:'1000px',margin:'0 auto',flexDirection:'column'}}>
-          <img style={{width:'400px',height:'100px'}} src={logo} alt="" />
+            <h1 style={{textAlign:'start'}}>Requests</h1>
           {responsesData.map((data, index) => (
-            <ResponseCard 
+            <RequestCard 
             key={index} 
             data={data}
             buttonTexts={{ Order: "Order", Contact: "Contact" }} />
           ))}
         </div>
-        </div>
-        </>
-    )
+    </div>
+    </>
+  )
 }
+
+export default Requests
