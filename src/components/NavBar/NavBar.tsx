@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Menu, Dropdown } from 'antd';
+import UserIcon from '../../assets/woman-user-circle-icon.webp'
+import Logo from '../../assets/logo.png'
 
 interface NavBarProps {
   logoSrc: string; // Path to your logo image
@@ -25,22 +27,25 @@ const NavBar: React.FC<NavBarProps> = ({
   );
 
   return (
-    <nav style={{ display: 'flex', justifyContent: 'space-between' ,width:'100%',height:'100px',backgroundColor:' #f5f5f5'}}> {/* Inline Style  */}
+    <nav style={{ display: 'flex', justifyContent: 'space-between' ,width:'1450px',height:'100px',margin:'0 auto'}}> {/* Inline Style  */}
       <div style={{ display: 'flex', alignItems: 'center' }}> {/* Inline Style  */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center' }}> {/* Inline Style  */}
-          <img src={logoSrc} alt={appName} />
-          <span>{appName}</span>
+          <img style={{width:'200px'}} src={Logo} alt={appName} />
         </Link>
       </div>
       <div style={{ display: 'flex', alignItems: 'center' }}> {/* Inline Style  */}
         <Dropdown overlay={menu} placement="bottomRight">
-          <a>
+          <a style={{display:'flex',alignItems:'center'}}>
             {profilePhotoSrc ? (
-              <Avatar src={profilePhotoSrc} />
+              <Avatar src={UserIcon} />
             ) : (
-              <Avatar icon="user" />
+              <Avatar icon="" />
             )}
-            <span>{userName}</span>
+            <span>
+              <h2 style={{margin:'0 0 0 10px'}}>Medicare</h2>
+              <span style={{color:'#ad9d9d',fontSize:'10px',marginLeft:'-15px'}}>View Profile</span>
+            </span>
+            {/* <span>{userName}</span> */}
           </a>
         </Dropdown>
       </div>

@@ -50,7 +50,7 @@ export const PhamacistDashboard = () =>{
  
       <Menu
         onClick={onClick}
-        style={{ width: 256}}
+        style={{ width: 256,textAlign:'start'}}
         defaultSelectedKeys={['1']}
         defaultOpenKeys={['sub1']}
         mode="inline"
