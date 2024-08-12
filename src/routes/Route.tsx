@@ -7,12 +7,13 @@ import {Dashboard} from "../pages/dashboard/Dashboard";
 import {UserRegistration} from "../pages/Users/UserRegistration";
 import { PateintDashboard } from "../components/Dashboards/PateintDashboard";
 import { PhamacistDashboard } from "../components/Dashboards/PhamacistDashboard";
-import { UploadPriscription } from "../pages/UploadPriscription/UploadPriscriptiion";
+import { UploadPrescription } from "../pages/UploadPriscription/UploadPrescription";
 import { Responses } from "../pages/Responses/Responses";
 import { UserLogin } from "../pages/Users/UserLogin";
 import Overview from './../pages/Overview/Overview';
 import Orders from "../pages/Orders/Orders";
 import Requests from "../pages/Requests/Requests";
+import Analytics from "../pages/Analytics/Analytics";
 
 
 export const ROUTES = createBrowserRouter([
@@ -33,25 +34,23 @@ export const ROUTES = createBrowserRouter([
         element:<UserLogin/>
     },
     {
-        path: "/",
-        element: <BaseLayout />,
+        path: "/pharmacist",
+        element: <PhamacistDashboard />,
         children: [
+
             {
-                path: "/",
+                path: "requests",
                 index: true,
-                element:<Dashboard/>
+                element:<Requests />
+
             },
-    
-            {
-                path: "/pharmacist",
-                index: true,
-                element:<PhamacistDashboard/>
-            },
+           
            
 
         ]
     }
 ,
+
     {
         path: "/patient",
         element:<PateintDashboard/>,
@@ -59,7 +58,7 @@ export const ROUTES = createBrowserRouter([
             {
                 path: "upload",
                 index: true,
-                element:<UploadPriscription/>
+                element:<UploadPrescription/>
             },
 
             {
@@ -83,12 +82,52 @@ export const ROUTES = createBrowserRouter([
 
             },
 
-            {
-                path: "requests",
-                index: true,
-                element:<Requests />
-
-            },
+           
         ]
     },
+
+    // {
+    //     path: "/pharmacist",
+    //     element:<PhamacistDashboard/>,
+    //     children:[
+    //         // {
+    //         //     path: "/overveiw",
+    //         //     index: true,
+    //         //     element:<Requests/>
+    //         // },
+    //         {
+    //             path: "/request",
+    //             index: true,
+    //             element:<Requests/>
+    //         },
+
+    //         // {
+    //         //     path: "report",
+    //         //     index: true,
+    //         //     element:<Analytics/>
+
+    //         // },
+
+    //         // {
+    //         //     path: "overview",
+    //         //     index: true,
+    //         //     element:<Overview />
+
+    //         // },
+
+    //         // {
+    //         //     path: "orders",
+    //         //     index: true,
+    //         //     element:<Orders />
+
+    //         // },
+
+    //         // {
+    //         //     path: "requests",
+    //         //     index: true,
+    //         //     element:<Requests />
+
+    //         // },
+    //     ]
+    // },
 ]);

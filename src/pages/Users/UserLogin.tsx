@@ -15,21 +15,33 @@ export const UserLogin: React.FC = () => {
 
   const handleLogin = async () => {
     const loginDto: SigninDto = {
-      userName: username,
+      username: username,
       password: password,
     };
 
-    const loginSuccess = await loginUser(loginDto);
+    const userData = await loginUser(loginDto);
 
-    if (loginSuccess) {
+    if (userData) {
       notification.success({
         message: 'Success',
-        description: 'User registered successfully',
+        description: 'User Login successfully',
     });
+
+    const roles = userData.roles;
+      if (roles.includes('ROLE_PHARMACIST')) {
+        window.location.href = '/pharmacist';
+      } else if (roles.includes('ROLE_CUSTOMER')) {
+        window.location.href = 'patient/upload';
+      } else {
+        notification.error({
+          message: 'Error',
+          description: 'User role not recognized',
+        });
+      }
     } else {
       notification.error({
         message: 'Error',
-        description: 'User registered Failed',
+        description: 'User Login Failed',
     });
     }
   };

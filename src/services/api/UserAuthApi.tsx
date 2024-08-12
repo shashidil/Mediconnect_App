@@ -34,9 +34,10 @@ export async function registerUser(signupData:SignupDto){
 export async function loginUser(loginDto:SigninDto) {
     try{
         //`${BASE_URL}/api/auth/signin`,loginDto
-        const response = await axios.post(`http://localhost:8080/api/auth/signin`)
+        const response = await axios.post(`http://localhost:8080/api/auth/signin`,loginDto)
             if (response.data.accessToken) {
               localStorage.setItem("user", JSON.stringify(response.data));
+              localStorage.setItem('userId', response.data.id);
             }
             return response.data;
         

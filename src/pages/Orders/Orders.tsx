@@ -1,72 +1,68 @@
-import React from 'react'
-import { Card } from 'antd';
-import payment from '../../assets/payment.png'
-import { Button } from 'antd';
-import { Divider, Table } from 'antd';
-import type { TableColumnsType } from 'antd';
+import React,{useState,useEffect }from 'react';
+import { Card, Button, Divider, Form,notification,Radio, Input  } from 'antd';
+import { Elements, useStripe, useElements, CardElement, CardNumberElement, CardExpiryElement, CardCvcElement, AddressElement } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { useLocation } from 'react-router-dom';
+import { ResponseData } from '../../components/Card/ResponseCard';
+import { processOrderPayment } from '../../services/api/OrderApi';
+import { PaymentForm } from '../../components/PaymentForm/PaymentForm';
+import PurchaseSuccess from '../../components/PaymentForm/PurchaseSuccess';
 
-interface DataType {
-    key: React.Key;
-    itm: string;
-    qty: number;
-    price: string;
-  }
-
-  const columns: TableColumnsType<DataType> = [
-    {
-      title: 'Item',
-      dataIndex: 'itm',
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'qty',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-    },
-  ];
-
-  const data: DataType[] = [
-    {
-      key: '1',
-      itm: 'Paracitamol',
-      qty: 10,
-      price: '2000',
-    }
-  ];
+const stripePromise = loadStripe('pk_test_51PlqqoBk6PYt3LyQFjp7Fgafw2HQtEYKLFw4BO5JbOhN5KMKM7BmWA9BUW3WENzPkq4NdiqaH6QKHGxWGNi7KbAL00XSGnPogD');
 
 const Orders = () => {
+  const [orderNumber, setOrderNumber] = useState('');
+  const [isOrderCompleted, setIsOrderCompleted] = useState(false);
+  const location = useLocation();
+  const data = location.state as ResponseData;
+
+  useEffect(() => {
+    const generateOrderNumber = () => `ORD#${Math.floor(1000 + Math.random() * 9000)}`;
+    setOrderNumber(generateOrderNumber());
+  }, []);
+
+  const handleOrderCompletion = () => {
+    setIsOrderCompleted(true);
+  };
+
   return (
     <>
-    <div>
-        <Card style={{ width: 500,textAlign:'start' }}>
-            <h2>Medicare - Galle</h2>
-            <Table columns={columns} dataSource={data} size="small" />
-            <h3>Total: 2000.00 LKR</h3>
-        </Card>
-        <div style={{width: 500}}>
-            <h4 style={{textAlign:'start'}}>PAYMENT METHOD</h4> 
-            <form action="" style={{border:'1px solid #a9a9fd',padding:'20px'}}>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                    <div style={{display:'flex'}}> 
-                        <input type="checkbox" />
-                        <label htmlFor="">Credit Card Details</label>
-                    </div>
-                    <img style={{width:'70px'}} src={payment} alt="" />
-                </div>
-                <div style={{marginTop:'20px'}}>
-                    <input placeholder='Card Number' style={{outline:'none',width:'70%',padding:'10px'}} type="text" />
-                    <input placeholder='MM' style={{borderTop:'2px solid #ccc',borderBottom:'2px solid #ccc',outline:'none',width:'10%',padding:'10px',borderRight:'none',borderLeft:'1px solid #ccc'}} type="text" />
-                    <input placeholder='YY' style={{borderTop:'2px solid #ccc',borderBottom:'2px solid #ccc',outline:'none',width:'10%',padding:'10px',borderRight:'none',borderLeft:'none'}} type="text" />
-                    <input placeholder='CVC' style={{borderTop:'2px solid #ccc',borderRight:'2px solid #ccc',borderBottom:'2px solid #ccc',outline:'none',width:'10%',padding:'10px',borderLeft:'none'}} type="text" />
-                </div>
-            </form>
-            <Button style={{display:'flex',alignItems:'center',marginTop:'30px',background:'#2e384d',padding:'25px 50px',color:'white',borderRadius:'20px'}}>Pay</Button>
+    {isOrderCompleted ? (
+      <PurchaseSuccess orderNumber={orderNumber} />
+    ) : (
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* Payment Section */}
+        <div style={{ width: '50%' }}>
+          <Card title="Payment" bordered={false} style={{ marginRight: '20px' }}>
+            <PaymentForm orderNumber={orderNumber} data={data} onOrderComplete={handleOrderCompletion} />
+          </Card>
         </div>
-    </div>
-    </>
-  )
-}
 
-export default Orders
+        {/* Order Summary Section */}
+        <div style={{ width: '40%' }}>
+          <Card title="Order Summary" bordered={false}>
+            <p>Pharmacist Name: {data.pharmacistName}</p>
+            <p>Order Number: {orderNumber}</p>
+            <p>Invoice Number: {data.invoiceNumber}</p>
+            <Divider />
+            <h3>Total: {data.total}</h3>
+          </Card>
+        </div>
+      </div>
+    )}
+  </>
+  );
+};
+
+
+const App = () => {
+  return (
+    <Elements stripe={stripePromise}>
+      <Orders />
+    </Elements>
+  );
+};
+
+
+export default App;
+
