@@ -3,7 +3,7 @@ import { Result, Button, Divider, Form,notification,Radio, Input  } from 'antd';
 import { Elements, useStripe, useElements, CardElement} from '@stripe/react-stripe-js';
 import { StripeCardElementOptions } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { ResponseData } from '../../components/Card/ResponseCard';
+import{ResponseData} from "../../Interfaces/ResposeData"
 import { processOrderPayment } from '../../services/api/OrderApi';
 import PurchaseSuccess from './PurchaseSuccess';
 

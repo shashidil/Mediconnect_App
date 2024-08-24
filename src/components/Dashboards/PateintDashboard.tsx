@@ -49,7 +49,7 @@ export const PateintDashboard :React.FC= () =>{
           navigate("response");
           break;
         case "3":
-          navigate("/patient/orders");
+          navigate("/patient/ordersHistory");
           break;
         case "4":
           navigate("/patient/chat");

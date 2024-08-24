@@ -1,4 +1,5 @@
-import { ResponseCard, ResponseData } from "../../components/Card/ResponseCard"
+import { ResponseCard } from "../../components/Card/ResponseCard"
+import{ResponseData} from "../../Interfaces/ResposeData"
 import logo from '../../assets/responses.png'
 import Image from '../../assets/heart.png'
 import { useEffect, useState } from "react"

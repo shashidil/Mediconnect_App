@@ -52,15 +52,15 @@ export const PhamacistDashboard = () =>{
         case "2":
           navigate("requests");
           break;
-        // case "3":
-        //   navigate("/patient/orders");
-        //   break;
+        case "3":
+          navigate("/pharmacist/payment");
+          break;
         // case "4":
-        //   navigate("/patient/chat");
-        //   break;
-        // case "5":
-        //   navigate("/patient/tracking");
-        //   break;
+        //  navigate("payment");
+        //  break;
+        case "5":
+          navigate("/pharmacist/chat");
+          break;
         // case "6":
         //   navigate("/patient/settings");
         //   break;

@@ -3,7 +3,7 @@ import { Card, Button, Divider, Form,notification,Radio, Input  } from 'antd';
 import { Elements, useStripe, useElements, CardElement, CardNumberElement, CardExpiryElement, CardCvcElement, AddressElement } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useLocation } from 'react-router-dom';
-import { ResponseData } from '../../components/Card/ResponseCard';
+import{ResponseData} from "../../Interfaces/ResposeData"
 import { processOrderPayment } from '../../services/api/OrderApi';
 import { PaymentForm } from '../../components/PaymentForm/PaymentForm';
 import PurchaseSuccess from '../../components/PaymentForm/PurchaseSuccess';

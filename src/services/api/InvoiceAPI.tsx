@@ -26,3 +26,16 @@ export const SendInvoice = async (formData: any) => {
       throw error;
     }
   };
+  export const GetInvoiceByInvoceNumber = async (invoiceNumber: string) => {
+    try {
+      const response = await axiosInstance.get(`/api/invoices/number/${invoiceNumber}`);
+      return response.data;
+    } catch (error: any) {
+      console.error("Error fetching invoices:", error);
+      if (error.response && error.response.data) {
+        return error.response.data;
+      }
+      throw error;
+    }
+  };
+  

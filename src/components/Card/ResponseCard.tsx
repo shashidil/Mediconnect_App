@@ -2,30 +2,12 @@ import React, { useState } from 'react';
 import { Button, Card, Modal } from 'antd';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
+import{ResponseData} from "../../Interfaces/ResposeData"
 import 'leaflet-routing-machine';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
-export interface Medication {
-  medicationName: string;
-  medicationDosage: string;
-  medicationQuantity: number;
-  amount: number;
-}
 
-export interface ResponseData {
-  pharmacistName: string;
-  medications: Medication[];
-  invoiceNumber:String;
-  additionalNotes: string | null;
-  distance: number;
-  total: number;
-  pharmacistId:number;
-  pharmacistLatitude: number;
-  pharmacistLongitude: number;
-  customerLatitude: number;
-  customerLongitude: number;
-}
 
 interface ResponseCardProps {
   data: ResponseData;
@@ -54,7 +36,10 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts })
     navigate('/patient/orders', { state: data });
     
   };
-
+  const handleContactClick = () => {
+    navigate('/patient/chat', { state: { name: data.pharmacistName, id: data.pharmacistId } });
+    //console.log(data.pharmacistName);
+  };
   return (
     <>
       <Card>
@@ -93,7 +78,9 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts })
               fontWeight: 'bold',
               border: '0',
               margin: '10px'
-            }}>
+            }}
+            onClick={handleContactClick}
+            >
             {contactText}
           </Button>
         </div>
@@ -101,7 +88,7 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts })
 
       <Modal
         title="Detailed Information"
-        visible={isMapModalVisible}
+        open={isMapModalVisible}
         onOk={handleMapModalOk}
         onCancel={handleMapModalCancel}
         footer={null}

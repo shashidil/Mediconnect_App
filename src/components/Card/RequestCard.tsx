@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Card, Button, Form, Input, notification, Space, Row, Col } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 import { SendInvoice } from '../../services/api/InvoiceAPI';
 
@@ -36,6 +37,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
   const [medications, setMedications] = useState<Medication[]>([]);
   const [form] = Form.useForm();
   const [invoiceNumber, setInvoiceNumber] = useState('');
+  const navigate = useNavigate();
 
   const base64String = `data:image/png;base64,${data.imageData}`;
 
@@ -133,6 +135,10 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
     }
   };
 
+  const handleContactClick = () => {
+    navigate('/pharmacist/chat', { state: { name: data.user.name, id: data.user.id } });
+  };
+
   return (
     <>
       <Card style={{ width: "100%" }}>
@@ -146,7 +152,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', width: '35%', float: 'right' }}>
           <a href={base64String} download={data.fileName} style={{ margin: '10px 0' }}>Download Image</a>
-          <button style={{ padding: '12px', color: '#2e384d', width: '140px', borderRadius: '5px', fontWeight: 'bold', border: '0', margin: '10px' }}>Contact</button>
+          <button onClick={handleContactClick} style={{ padding: '12px', color: '#2e384d', width: '140px', borderRadius: '5px', fontWeight: 'bold', border: '0', margin: '10px' }}>Contact</button>
           <button onClick={showInvoiceModal} style={{ padding: '12px', color: '#2e384d', width: '140px', borderRadius: '5px', fontWeight: 'bold', border: '0', margin: '10px' }}>Add Medication</button>
         </div>
       </Card>

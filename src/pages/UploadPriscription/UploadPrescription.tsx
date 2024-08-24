@@ -135,7 +135,7 @@ export const UploadPrescription: React.FC= () => {
 
       <Modal
         title="Select Pharmacist"
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={() => setModalVisible(false)}
       >
         {pharmacists.map(pharmacist => (
