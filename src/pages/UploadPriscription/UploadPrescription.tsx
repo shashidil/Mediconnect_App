@@ -74,6 +74,7 @@ export const UploadPrescription: React.FC= () => {
     try {
       await uploadPrescription(file, userId,  pharmacistIds );
       message.success('File uploaded successfully');
+      setFile(null);
       setModalVisible(false);
     } catch (error) {
       message.error('File upload failed');
@@ -82,8 +83,13 @@ export const UploadPrescription: React.FC= () => {
 
   const uploadProps: UploadProps = {
     beforeUpload: (file) => {
+      const isSupportedType = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'application/pdf';
+      if (!isSupportedType) {
+        message.error('You can only upload JPG/PNG/PDF files!');
+        return Upload.LIST_IGNORE;
+      }
       setFile(file);
-      return false;
+      return false; // Prevent automatic upload by Ant Design
     },
     onRemove: () => {
       setFile(null);
@@ -123,7 +129,7 @@ export const UploadPrescription: React.FC= () => {
             <Button style={{ background: '#2e384d', color: 'white', padding: '25px', display: 'flex', alignItems: 'center', width: '495px', justifyContent: 'center' }} type="primary" block>
               INQUIRE MEDICINE
             </Button>
-            <Button onClick={handleUpload} style={{ background: '#ff525a', color: 'white', padding: '25px', display: 'flex', alignItems: 'center', width: '495px', justifyContent: 'center' }} type="primary" block>
+            <Button onClick={handleUpload} style={{ background: '#ff525a',marginTop:'10px', color: 'white', padding: '25px', display: 'flex', alignItems: 'center', width: '495px', justifyContent: 'center' }} type="primary" block>
               CHECK AVAILABILITY
             </Button>
           </div>

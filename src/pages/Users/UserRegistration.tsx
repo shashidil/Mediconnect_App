@@ -14,7 +14,7 @@ export const UserRegistration= () =>{
     const [validRegNumber, setValidRegNumber] = useState(false);
 
     const [signupDto, setSignupDto] = useState<SignupDto>({
-      patientRequest: {
+        signupRequestPatient: {
           username: '',
           lastName: '',
           firstName: '',
@@ -27,7 +27,7 @@ export const UserRegistration= () =>{
           postalCode: '',
           role: ['customer'], 
       },
-      pharmacistRequest: {
+      signupRequestPharmacist: {
           username: '',
           email: '',
           password: '',
@@ -68,7 +68,7 @@ export const UserRegistration= () =>{
       const formData = { ...values, role: ['customer'] };
   
       try {
-        setSignupDto({ ...signupDto, patientRequest: formData });
+        setSignupDto({ ...signupDto, signupRequestPatient: formData });
           const response = await registerUser( signupDto );
           handleResponse(response);
       } catch (error) {
@@ -79,7 +79,7 @@ export const UserRegistration= () =>{
   const handlePharmacistFormSubmit = async (values: any) => {
       const formData = { ...values, role: ['Pharmacist'] };
       try {
-        setSignupDto({ ...signupDto, pharmacistRequest: formData });
+        setSignupDto({ ...signupDto, signupRequestPharmacist: formData });
           const response = await registerUser( signupDto);
           handleResponse(response);
       } catch (error) {
@@ -123,7 +123,7 @@ const handleError = (error: any) => {
                                     labelCol={{ span: 6 }}
                                     wrapperCol={{ span: 14, offset: 6 }}
                                     layout="horizontal"
-                                    initialValues={signupDto.patientRequest}
+                                    initialValues={signupDto.signupRequestPatient}
                                 >
                                 <Form.Item name="activeTab" initialValue="1" hidden />
                                 <Form.Item
@@ -151,7 +151,7 @@ const handleError = (error: any) => {
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<MailOutlined />} placeholder="Email" />
                                 </Form.Item>
                                 <Form.Item
-                                    name="address1"
+                                    name="addressLine1"
                                     rules={[{ required: true, message: 'Please enter your Address1' }]}
                                 >
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Address Line 1" />
@@ -164,13 +164,13 @@ const handleError = (error: any) => {
                                 </Form.Item>
 
                                 <Form.Item
-                                    name="state"
+                                    name="states"
                                     rules={[{ required: true, message: 'Please enter your state' }]}
                                 >
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="state" />
                                 </Form.Item>
                                 <Form.Item
-                                    name="postalcode"
+                                    name="postalCode"
                                     rules={[{ required: true, message: 'Please enter your postalcode' }]}
                                 >
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Postal Code" />
@@ -244,7 +244,7 @@ const handleError = (error: any) => {
                                     labelCol={{ span: 6 }}
                                     wrapperCol={{ span: 14, offset: 6 }}
                                     layout="horizontal"
-                                    initialValues={signupDto.pharmacistRequest}
+                                    initialValues={signupDto.signupRequestPharmacist}
                                     onBlur={()=>handleRegNumberCheck}
                                 >
                                 <Form.Item name="activeTab" initialValue="2" hidden />
@@ -286,7 +286,7 @@ const handleError = (error: any) => {
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<UserOutlined />} placeholder="Address" />
                                 </Form.Item> */}
                                 <Form.Item
-                                    name="address1"
+                                    name="addressLine1"
                                     rules={[{ required: true, message: 'Please enter your Address1' }]}
                                 >
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Address Line 1" />
@@ -316,7 +316,7 @@ const handleError = (error: any) => {
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="states" />
                                 </Form.Item>
                                 <Form.Item
-                                    name="postalcode"
+                                    name="postalCode"
                                     rules={[{ required: true, message: 'Please enter your postalcode' }]}
                                 >
                                 <Input style={{padding:'10px',left:'-120px' }} prefix={<EnvironmentOutlined />} placeholder="Postal Code" />

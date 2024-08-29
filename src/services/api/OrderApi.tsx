@@ -3,7 +3,7 @@ import axiosInstance from '../axiosInstance';
 import{UpdateOrderRequest} from '../../Interfaces/UpdateOrderRequest'
 
 export const processOrderPayment = async (
-  invoiceId: String,
+  Id: number,
   orderNumber: String,
   pharmacistId: number,
   customerId: number,
@@ -13,7 +13,7 @@ export const processOrderPayment = async (
   try {
     const response = await axiosInstance.post('/api/orders/process-payment', null, {
       params: {
-        invoiceId,
+        Id,
         orderNumber,
         pharmacistId,
         customerId,
@@ -44,9 +44,10 @@ export const fetchOrderHistory = async (id: number, isPharmacist: boolean) => {
 
 
 
-export const updateOrder = async (orderId: string, updateData: UpdateOrderRequest) => {
+export const updateOrder = async (orderId: number, updateData: UpdateOrderRequest) => {
+  console.log(orderId)
   try {
-    const response = await axiosInstance.put(`update/${orderId}`, updateData);
+    const response = await axiosInstance.put(`/api/orders/update/${orderId}`, updateData);
     return response.data;
   } catch (error) {
     console.error('Error updating order:', error);

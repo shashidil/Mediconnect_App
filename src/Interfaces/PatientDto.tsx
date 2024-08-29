@@ -5,9 +5,9 @@ export interface PatientDto {
     email: string;
     password: string;
     phoneNumber: string;
-    addressLine1: string;
+    addressLine1: string;  
     city: string;
-    states: string;
-    postalCode: string;
+    states: string;  
+    postalCode: string;  
     role: string[];
 }

@@ -178,6 +178,13 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
             <Input />
           </Form.Item>
           <Form.Item
+            label="Days"
+            name="days"
+            rules={[{ required: true, message: 'Please day the medication dosage!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             label="Medication Quantity"
             name="medicationQuantity"
             rules={[{ required: true, message: 'Please input the medication quantity!' }]}

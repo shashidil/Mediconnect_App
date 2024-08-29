@@ -62,7 +62,7 @@ type PaymentFormProps = {
             const customerId = localStorage.getItem('userId') || '';
             console.log(data.pharmacistId);
             const response = await processOrderPayment(
-            data.invoiceNumber,  // Use actual invoiceId from the data
+            data.id,  // Use actual invoiceId from the data
             orderNumber,
             data.pharmacistId, // Use actual pharmacistId from the data
             Number(customerId),  // Use actual customerId from the data

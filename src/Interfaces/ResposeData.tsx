@@ -1,6 +1,7 @@
 import {Medication} from "../Interfaces/Medication";
 
 export interface ResponseData {
+    id:number;
     pharmacistName: string;
     medications: Medication[];
     invoiceNumber:String;

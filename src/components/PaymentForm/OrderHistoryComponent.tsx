@@ -12,8 +12,8 @@ const { Title, Text } = Typography;
 
 interface OrderHistoryComponentProps {
   orders: Order[];
-  refreshOrders: () => void; // Function to reload orders after update
-  isPharmacist: boolean; // New prop to differentiate between patient and pharmacist
+  refreshOrders: () => void; 
+  isPharmacist: boolean; 
 }
 
 const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, refreshOrders, isPharmacist }) => {
@@ -42,22 +42,26 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
     if (!editingOrder) return;
     setUpdateLoading(true);
     try {
-      await updateOrder(editingOrder.orderNumber, formValues);
+      // Make API call using the order number from the editingOrder object
+      
+      await updateOrder(editingOrder.id, formValues);
+     
       notification.success({
         message: 'Success',
-        description: 'Order updated successfully.',
+        description: `Order ${editingOrder.orderNumber} updated successfully.`,
       });
       setIsEditing(false);
       refreshOrders(); // Reload orders to reflect changes
     } catch (error) {
       notification.error({
         message: 'Error',
-        description: 'Failed to update order.',
+        description: `Failed to update order ${editingOrder.orderNumber}.`,
       });
     } finally {
       setUpdateLoading(false);
     }
   };
+  
 
   const showInvoice = async (invoiceNumber: string) => {
     try {

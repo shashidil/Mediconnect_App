@@ -1,99 +1,137 @@
-import React,{ useState }  from 'react';
+import React, { useState } from 'react';
 import { EyeInvisibleOutlined, EyeTwoTone, UserOutlined } from '@ant-design/icons';
-import { Input, Button,Row,Col,notification } from 'antd';
-import img from '../../assets/uploadimage.jpg';
+import { Input, Button, Row, Col, Form,notification } from 'antd';
 import { SigninDto } from '../../Interfaces/SigninDto';
 import { loginUser } from '../../services/api/UserAuthApi';
-import googleLogo from '../../assets/google.svg'
-import Logo from '../../assets/logo.png'
-import login from '../../assets/login.jpg'
-
+import googleLogo from '../../assets/google.svg';
+import Logo from '../../assets/logo.png';
+import login from '../../assets/login.jpg';
+import { MedicationReminder } from '../../services/MedicationReminder';
 
 export const UserLogin: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const handleLogin = async () => {
-    const loginDto: SigninDto = {
-      username: username,
-      password: password,
-    };
+    try {
+      const loginDto: SigninDto = {
+        username: username,
+        password: password,
+      };
 
-    const userData = await loginUser(loginDto);
+      const userData = await loginUser(loginDto);
 
-    if (userData) {
-      notification.success({
-        message: 'Success',
-        description: 'User Login successfully',
-    });
+      if (userData) {
+        const roles = userData.roles;
+        if (roles.includes('ROLE_PHARMACIST')) {
+          window.location.href = '/pharmacist';
+        } else if (roles.includes('ROLE_CUSTOMER')) {
+          window.location.href = 'patient/upload';
+        } else {
+          notification.error({
+            message: 'Error',
+            description: 'User role not recognized',
+          });
+        }
+       
 
-    const roles = userData.roles;
-      if (roles.includes('ROLE_PHARMACIST')) {
-        window.location.href = '/pharmacist';
-      } else if (roles.includes('ROLE_CUSTOMER')) {
-        window.location.href = 'patient/upload';
       } else {
         notification.error({
           message: 'Error',
-          description: 'User role not recognized',
+          description: 'User Login Failed',
         });
       }
-    } else {
+    } catch (error) {
       notification.error({
         message: 'Error',
-        description: 'User Login Failed',
-    });
+        description: 'Login failed. Please try again.',
+      });
     }
   };
 
   return (
-    <div style={{ textAlign: 'center',width:'1200px', margin:'0 auto',paddingTop:'60px' }}>
-    <Row style={{alignItems:'center'}} gutter={16} justify="center">
-      {/* Left side container */}
-      <Col span={12} >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' , position:'relative'}}>
-          {/* Logo and "Mediconnect" name */}
-          <div style={{ marginBottom: '20px' , marginTop:'20px'}}>
-            <img src={Logo} alt="Logo" style={{ width: '350px', height: 'auto' }} />
+    <div style={{ textAlign: 'center', width: '1200px', margin: '0 auto', paddingTop: '60px' }}>
+      <Row gutter={16} justify="center" align="middle">
+        <Col span={12}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+            <div style={{ marginBottom: '20px', marginTop: '20px' }}>
+              <img src={Logo} alt="Logo" style={{ width: '350px', height: 'auto' }} />
+            </div>
+            <h1 style={{ fontSize: '40px', fontWeight: '500' }}>Sign In</h1>
+
+            <Form onFinish={handleLogin} style={{ width: '80%' }}>
+              <Form.Item
+                name="username"
+                rules={[{ required: true, message: 'Please fill out this field' }]}
+              >
+                <Input
+                  placeholder="Enter your username"
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  value={username}
+                  style={{padding: '10px', width: '60%' }}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                rules={[{ required: true, message: 'Please fill out this field' }]}
+              >
+                <Input.Password
+                  placeholder="Input password"
+                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  value={password}
+                  style={{ marginTop: '20px', padding: '10px', width: '60%' }}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Item>
+
+              <Row justify="space-between" style={{ width: '100%', marginTop: '-10px' }}>
+                <Col>
+                  <a style={{color:'#a79f9f',marginTop:'10px',position:'relative',marginLeft:'100px'}}  href="#">
+                    Forgot Password?
+                  </a>
+                </Col>
+              </Row>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ width: '60%', marginTop: '20px',marginLeft:'100px', padding: '10px', background: '#2e384d', color: '#fff' ,textAlign:'center',display:'flex',justifyContent:'center',alignItems:'center'}}
+                >
+                  LOGIN
+                </Button>
+              </Form.Item>
+            </Form>
+
+            <Button
+              type="primary"
+              style={{
+                width: '80%',
+                marginTop: '20px',
+                padding: '10px',
+                background: '#fff',
+                color: '#534747',
+                fontWeight: 'bold',
+                border: '2px solid #a2aecd',
+                textAlign:'center',display:'flex',justifyContent:'center',alignItems:'center',
+              }}
+            >
+              <img style={{width:'20px',height:'20px',marginRight:'10px'}} src={googleLogo} alt="google login" />
+              Continue with Google
+            </Button>
+
+            <div style={{ marginTop: '20px', color: '#a79f9f' }}>
+              Don't have an account? <a href="">Sign up</a>
+            </div>
           </div>
-          <h1 style={{left: '-110px',position: 'relative',fontSize: '40px',fontWeight:'500'}}>Sign In</h1>
-          
-          <Input
-              placeholder="Enter your username"
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              style={{padding: '10px', width: '60%' }}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-          />
+        </Col>
 
-          <Input.Password
-              placeholder="Input password"
-              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-              style={{ marginTop: '40px', padding: '10px', width: '60%' }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-          />
-          <a style={{left:'-120px',color:'#a79f9f',marginTop:'10px',position:'relative'}} href="#">Forgot Password ?</a>
-
-          {/* Continue with Google */}
-          <Button type="primary" style={{ width: '60%', marginTop: '40px',padding:'20px' ,textAlign:'center',background:'#fff',display:'flex',justifyContent:'center',alignItems:'center',border:'2px solid #a2aecd',color:'#534747',fontWeight:'bold'} }>
-            <img style={{width:'20px',height:'20px',marginRight:'10px'}} src={googleLogo} alt="google login" />
-            Continue with Google
-          </Button>
-
-          {/* Login Button */}
-          <Button type="primary" onClick={handleLogin} htmlType="submit" style={{ width: '60%', marginTop: '20px',padding:'20px' ,textAlign:'center',background:'#2e384d',display:'flex',justifyContent:'center',alignItems:'center'}}>
-            LOGIN
-          </Button>
-          <span style={{left:'-65px',color:'#a79f9f',position:'relative',marginTop:'10px'}}>Don't you have an account ? <a href="">Sign up</a></span>
-        </div>
-      </Col>
-
-      {/* Right side container */}
-      <Col span={12}>
-        <img src={login} alt="Image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-      </Col>
-    </Row>
-  </div>
+        <Col span={12}>
+          <img src={login} alt="Login" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        </Col>
+      </Row>
+    </div>
   );
 };
