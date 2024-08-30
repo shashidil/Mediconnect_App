@@ -17,7 +17,7 @@ import Analytics from "../pages/Analytics/Analytics";
 import ChatPage from "../pages/ChatApp/ChatPage";
 import OrderHistory from "../pages/Orders/OrderHistory";
 import PharmacistOrderPage from "../pages/Orders/PharmacistOrder/OrderHistoryPharmacist";
-
+import {Settings} from "../pages/Settings/Settings";
 
 export const ROUTES = createBrowserRouter([
     {
@@ -57,6 +57,12 @@ export const ROUTES = createBrowserRouter([
                 path: "Payment",
                 index: true,
                 element:<PharmacistOrderPage />
+
+            },
+            {
+                path: "settings",
+                index: true,
+                element:<Settings/>
 
             },
            
@@ -105,6 +111,12 @@ export const ROUTES = createBrowserRouter([
                 path: "ordersHistory",
                 index: true,
                 element:<OrderHistory />
+
+            },
+            {
+                path: "settings",
+                index: true,
+                element:<Settings/>
 
             },
 

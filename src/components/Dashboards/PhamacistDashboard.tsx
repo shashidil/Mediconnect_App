@@ -61,9 +61,9 @@ export const PhamacistDashboard = () =>{
         case "5":
           navigate("/pharmacist/chat");
           break;
-        // case "6":
-        //   navigate("/patient/settings");
-        //   break;
+        case "6":
+          navigate("/patient/settings");
+          break;
         // case "7":
         //   navigate("/logout");
         //   break;

@@ -1,0 +1,256 @@
+import React, { useEffect, useState } from 'react';
+import { Card, Form, Input, Button, Row, Col, notification, Spin } from 'antd';
+import { GetUserData } from "../../services/api/UserSettingsAPI";
+import { UpdateUserData } from "../../services/api/UserSettingsAPI"; // Import the update function
+
+export const Settings: React.FC = () => {
+    const [form] = Form.useForm();
+    const [stripeForm] = Form.useForm();
+    const [isPharmacist, setIsPharmacist] = useState(false);
+    const [formData, setFormData] = useState<any>({});
+    const [loading, setLoading] = useState(true);
+    const [updateLoading, setUpdateLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            setLoading(true); // Set loading to true when starting to fetch data
+            try {
+                const userId = localStorage.getItem('userId');
+                const storedAuthData = localStorage.getItem('user');
+                if (userId) {
+                    const data = await GetUserData(Number(userId));
+
+                    // Prepare formData based on fetched user data
+                    setFormData({
+                        username: data.username || '',
+                        email: data.email || '',
+                        firstName: data.firstName || '',
+                        lastName: data.lastName || '',
+                        phoneNumber: data.phoneNumber || '',
+                        addressLine1: data.addressLine1 || '',
+                        city: data.city || '',
+                        states: data.states || '',
+                        postalCode: data.postalCode || '',
+                        pharmacyName: data.pharmacyName || '',
+                    });
+
+                    if(storedAuthData){
+                        const authData =JSON.parse(storedAuthData);
+                        const role = authData.roles ? authData.roles[0] : null;
+                        if (role === 'ROLE_PHARMACIST') {
+                            setIsPharmacist(true);
+                        }
+                    }
+
+                }
+            } catch (error) {
+                console.error('Failed to fetch user data:', error);
+                setError('Failed to fetch user data.');
+            } finally {
+                setLoading(false); // Set loading to false after fetching data
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    useEffect(() => {
+        form.setFieldsValue(formData);
+    }, [formData, form]);
+
+    const handleFormSubmit = async (values: any) => {
+
+
+
+        setUpdateLoading(true); // Show spinner while updating
+        try {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                await UpdateUserData(Number(userId), values);
+                notification.success({
+                    message: 'Update Successful',
+                    description: 'User details have been updated successfully.',
+                });
+            }
+        } catch (error) {
+            console.error('Failed to update user data:', error);
+            notification.error({
+                message: 'Update Failed',
+                description: 'Failed to update user details. Please try again.',
+            });
+        } finally {
+            setUpdateLoading(false); // Hide spinner after updating
+        }
+    };
+
+    if (loading || updateLoading) {
+        return (
+            <div style={{ textAlign: 'center', padding: '50px', minHeight: '500px' }}>
+                <Spin size="large" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{ textAlign: 'center', padding: '50px', minHeight: '500px' }}>
+                <p>{error}</p>
+            </div>
+        );
+    }
+
+    return (
+        <Card>
+            <div style={{ marginBottom: '24px' }}>
+                <h2>Update User Details</h2>
+                <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
+            </div>
+            <Form
+                form={form}
+                onFinish={handleFormSubmit}
+                initialValues={formData}
+                layout="vertical"
+            >
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item
+                            label="Username"
+                            name="username"
+                            rules={[{ required: true, message: 'Please enter the username' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            label="Email"
+                            name="email"
+                            rules={[{ required: true, message: 'Please enter the email' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    {!isPharmacist && (
+                        <>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="First Name"
+                                    name="firstName"
+                                    rules={[{ required: true, message: 'Please enter the first name' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Last Name"
+                                    name="lastName"
+                                    rules={[{ required: true, message: 'Please enter the last name' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Phone Number"
+                                    name="phoneNumber"
+                                    rules={[{ required: true, message: 'Please enter the phone number' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </>
+                    )}
+                    <Col span={12}>
+                        <Form.Item
+                            label="Address Line 1"
+                            name="addressLine1"
+                            rules={[{ required: true, message: 'Please enter the address line 1' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            label="City"
+                            name="city"
+                            rules={[{ required: true, message: 'Please enter the city' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            label="State"
+                            name="states"
+                            rules={[{ required: true, message: 'Please enter the state' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            label="Postal Code"
+                            name="postalCode"
+                            rules={[{ required: true, message: 'Please enter the postal code' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    {isPharmacist && (
+                        <Col span={12}>
+                            <Form.Item
+                                label="Pharmacy Name"
+                                name="pharmacyName"
+                                rules={[{ required: true, message: 'Please enter the pharmacy name' }]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                    )}
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <Form.Item style={{ textAlign: 'right' }}>
+                            <Button type="primary" htmlType="submit">
+                                Update Details
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+            {isPharmacist && (
+                <>
+                    <div style={{ marginBottom: '24px', marginTop: '30px' }}>
+                        <h2>Update Stripe Email</h2>
+                        <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
+                    </div>
+                    <Form
+                        form={stripeForm}
+                        layout="vertical"
+                    >
+                        <Row gutter={16} align="bottom">
+                            <Col span={18}>
+                                <Form.Item
+                                    label="Stripe Email"
+                                    name="stripeEmail"
+                                    rules={[{ required: true, message: 'Please enter the Stripe email' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Form.Item style={{ textAlign: 'right', marginLeft: '20px' }}>
+                                    <Button type="primary" htmlType="submit">
+                                        Update Stripe Email
+                                    </Button>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    </Form>
+                </>
+            )}
+        </Card>
+    );
+};
