@@ -5,6 +5,7 @@ import { Menu,Layout, theme } from 'antd';
 import {Outlet,useNavigate} from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import { MedicationReminder } from "../../services/MedicationReminder";
+import axiosInstance from "../../services/axiosInstance";
 const { Header, Footer, Sider, Content } = Layout; 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -42,10 +43,23 @@ function getItem(
 export const PateintDashboard :React.FC= () =>{
   const navigate = useNavigate();
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   const userId = parseInt(localStorage.getItem('userId') || '0', 10);
+  //   MedicationReminder(userId.toString())
+  //   //sendTestNotification();
+  // }, []); 
+
+  const sendTestNotification = async () => {
     const userId = parseInt(localStorage.getItem('userId') || '0', 10);
-    MedicationReminder(userId.toString())
-  }, []); 
+    try {
+      await axiosInstance.get(`/api/test/sendTestNotification`, {
+        params: { userId },
+      });
+      console.log('Test notification sent');
+    } catch (error) {
+      console.error('Error sending test notification:', error);
+    }
+  };
 
  
 

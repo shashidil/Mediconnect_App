@@ -4,6 +4,7 @@ import {BASE_URL} from "../../Constants/Index";
 import { notification} from "antd";
 import { SignupDto } from "../../Interfaces/signupDto";
 import { SigninDto } from "../../Interfaces/SigninDto";
+import { MedicationReminder } from "../../services/MedicationReminder";
 
 export async function registerUser(signupData:SignupDto){
     try {
@@ -33,7 +34,8 @@ export async function loginUser(loginDto: SigninDto) {
         localStorage.setItem('userId', response.data.id);
         localStorage.setItem('accessToken', response.data.token);  // Save the token correctly
       }
-  
+     //   const userId = parseInt(localStorage.getItem('userId') || '0', 10);
+      MedicationReminder(response.data.id);
       return response.data;
     } catch (error) {
       console.log('Failed to login backend');

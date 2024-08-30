@@ -12,6 +12,8 @@ export const UserLogin: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  
+
   const handleLogin = async () => {
     try {
       const loginDto: SigninDto = {
@@ -20,19 +22,19 @@ export const UserLogin: React.FC = () => {
       };
 
       const userData = await loginUser(loginDto);
-
+     // MedicationReminder(userData.id);
       if (userData) {
-        const roles = userData.roles;
-        if (roles.includes('ROLE_PHARMACIST')) {
-          window.location.href = '/pharmacist';
-        } else if (roles.includes('ROLE_CUSTOMER')) {
-          window.location.href = 'patient/upload';
-        } else {
-          notification.error({
-            message: 'Error',
-            description: 'User role not recognized',
-          });
-        }
+        // const roles = userData.roles;
+        // if (roles.includes('ROLE_PHARMACIST')) {
+        //   window.location.href = '/pharmacist';
+        // } else if (roles.includes('ROLE_CUSTOMER')) {
+        //   window.location.href = 'patient/upload';
+        // } else {
+        //   notification.error({
+        //     message: 'Error',
+        //     description: 'User role not recognized',
+        //   });
+        // }
        
 
       } else {
