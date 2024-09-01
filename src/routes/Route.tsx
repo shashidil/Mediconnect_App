@@ -13,11 +13,13 @@ import { UserLogin } from "../pages/Users/UserLogin";
 import Overview from './../pages/Overview/Overview';
 import Orders from "../pages/Orders/Orders";
 import Requests from "../pages/Requests/Requests";
-import Analytics from "../pages/Analytics/Analytics";
 import ChatPage from "../pages/ChatApp/ChatPage";
 import OrderHistory from "../pages/Orders/OrderHistory";
 import PharmacistOrderPage from "../pages/Orders/PharmacistOrder/OrderHistoryPharmacist";
 import {Settings} from "../pages/Settings/Settings";
+import React from "react";
+import {Reports} from "../pages/Reports/Reports";
+import {Analytics} from "../pages/Analytics/Analytics";
 
 export const ROUTES = createBrowserRouter([
     {
@@ -63,6 +65,18 @@ export const ROUTES = createBrowserRouter([
                 path: "settings",
                 index: true,
                 element:<Settings/>
+
+            },
+            {
+                path: "reports",
+                index: true,
+                element:<Reports/>
+
+            },
+            {
+                path: "overview",
+                index: true,
+                element:<Analytics/>
 
             },
            

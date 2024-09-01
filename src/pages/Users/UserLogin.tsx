@@ -24,7 +24,7 @@ export const UserLogin: React.FC = () => {
       if (userData) {
         const roles = userData.roles;
         if (roles.includes('ROLE_PHARMACIST')) {
-          window.location.href = '/pharmacist';
+          window.location.href = '/pharmacist/overview';
         } else if (roles.includes('ROLE_CUSTOMER')) {
           window.location.href = 'patient/upload';
         } else {

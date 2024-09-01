@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, Input, Button, Row, Col, notification, Spin } from 'antd';
-import { GetUserData } from "../../services/api/UserSettingsAPI";
+import {GetStripeAccount, GetUserData, UpdateStripeAccount} from "../../services/api/UserSettingsAPI";
 import { UpdateUserData } from "../../services/api/UserSettingsAPI"; // Import the update function
 
 export const Settings: React.FC = () => {
@@ -8,6 +8,7 @@ export const Settings: React.FC = () => {
     const [stripeForm] = Form.useForm();
     const [isPharmacist, setIsPharmacist] = useState(false);
     const [formData, setFormData] = useState<any>({});
+    const [stripeFormData, setStripeFormData] = useState<any>({});
     const [loading, setLoading] = useState(true);
     const [updateLoading, setUpdateLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export const Settings: React.FC = () => {
                 const storedAuthData = localStorage.getItem('user');
                 if (userId) {
                     const data = await GetUserData(Number(userId));
+                    const stripeAccount= await GetStripeAccount(Number(userId));
 
                     // Prepare formData based on fetched user data
                     setFormData({
@@ -34,6 +36,9 @@ export const Settings: React.FC = () => {
                         postalCode: data.postalCode || '',
                         pharmacyName: data.pharmacyName || '',
                     });
+                    setStripeFormData({
+                        stripeEmail:stripeAccount.email || ''
+                    })
 
                     if(storedAuthData){
                         const authData =JSON.parse(storedAuthData);
@@ -57,11 +62,10 @@ export const Settings: React.FC = () => {
 
     useEffect(() => {
         form.setFieldsValue(formData);
+        stripeForm.setFieldsValue(stripeFormData);
     }, [formData, form]);
 
     const handleFormSubmit = async (values: any) => {
-
-
 
         setUpdateLoading(true); // Show spinner while updating
         try {
@@ -83,6 +87,27 @@ export const Settings: React.FC = () => {
             setUpdateLoading(false); // Hide spinner after updating
         }
     };
+    const handleStripeFormSubmit= async (values:any)=>{
+        setUpdateLoading(true); // Show spinner while updating
+        try {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                await UpdateStripeAccount(Number(userId), values.stripeEmail);
+                notification.success({
+                    message: 'Update Successful',
+                    description: 'The stripe account has been updated successfully..',
+                });
+            }
+        } catch (error) {
+            console.error('Failed to stripe account:', error);
+            notification.error({
+                message: 'Update Failed',
+                description: 'Failed to update stripe account. Please try again.',
+            });
+        } finally {
+            setUpdateLoading(false); // Hide spinner after updating
+        }
+    }
 
     if (loading || updateLoading) {
         return (
@@ -103,7 +128,7 @@ export const Settings: React.FC = () => {
     return (
         <Card>
             <div style={{ marginBottom: '24px' }}>
-                <h2>Update User Details</h2>
+                <h1>Update User Details</h1>
                 <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
             </div>
             <Form
@@ -223,12 +248,14 @@ export const Settings: React.FC = () => {
             {isPharmacist && (
                 <>
                     <div style={{ marginBottom: '24px', marginTop: '30px' }}>
-                        <h2>Update Stripe Email</h2>
+                        <h1>Update Stripe Email</h1>
                         <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
                     </div>
                     <Form
                         form={stripeForm}
                         layout="vertical"
+                        onFinish={handleStripeFormSubmit}
+                        initialValues={stripeFormData}
                     >
                         <Row gutter={16} align="bottom">
                             <Col span={18}>
