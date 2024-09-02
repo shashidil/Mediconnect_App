@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Card, Button, Form, Input, notification, Space, Row, Col } from 'antd';
+import {Modal, Card, Button, Form, Input, notification, Space, Row, Col, Avatar, Tooltip} from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { PlusOutlined } from '@ant-design/icons';
+import {MessageOutlined, PlusOutlined,DownloadOutlined} from '@ant-design/icons';
 import { SendInvoice } from '../../services/api/InvoiceAPI';
 
 export interface RequestData {
@@ -29,8 +29,6 @@ interface RequestCardProps {
 }
 
 export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) => {
-  const orderText = buttonTexts?.Order || 'Order';
-  const contactext = buttonTexts?.Contact || 'Contact';
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [isFinalInvoiceModalOpen, setIsFinalInvoiceModalOpen] = useState(false);
@@ -38,6 +36,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
   const [form] = Form.useForm();
   const [invoiceNumber, setInvoiceNumber] = useState('');
   const navigate = useNavigate();
+  const { Meta } = Card;
 
   const base64String = `data:image/png;base64,${data.imageData}`;
 
@@ -139,22 +138,57 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
     navigate('/pharmacist/chat', { state: { name: data.user.name, id: data.user.id } });
   };
 
+  const handleDownloadClick = (imageUrl: string) => {
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'downloaded-image.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
   return (
     <>
-      <Card style={{ width: "100%" }}>
-        <div style={{ display: 'flex', textAlign: 'start', fontWeight: '500', flexDirection: 'column' }}>
-          <h1>{data.user.name}</h1>
-          <h4 style={{ margin: '0', fontWeight: '400' }}>Email - {data.user.email}</h4>
-          <img src={base64String} alt={data.fileName} style={{ width: '100px', height: '100px', marginBottom: '10px' }} />
-          <Button type="primary" onClick={showModal} style={{ margin: '20px 0', position: 'absolute', top: '200px' }}>
-            View More
-          </Button>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', width: '35%', float: 'right' }}>
-          <a href={base64String} download={data.fileName} style={{ margin: '10px 0' }}>Download Image</a>
-          <button onClick={handleContactClick} style={{ padding: '12px', color: '#2e384d', width: '140px', borderRadius: '5px', fontWeight: 'bold', border: '0', margin: '10px' }}>Contact</button>
-          <button onClick={showInvoiceModal} style={{ padding: '12px', color: '#2e384d', width: '140px', borderRadius: '5px', fontWeight: 'bold', border: '0', margin: '10px' }}>Add Medication</button>
-        </div>
+      <Card
+          style={{ width: 200, margin: 20}}
+          cover={
+            <div style={{position: 'relative'}}>
+              <img
+                  alt="example"
+                  src={base64String}
+                  style={{width: '100%', height: '200px', objectFit: 'cover',borderRadius:'7px 7px 0px 0px'}}
+              />
+              <Button
+                  type="primary"
+                  style={{
+                    position: 'absolute',
+                    bottom: 10,
+                    right: 10,
+                  }}
+                  onClick={showModal}
+              >
+                View
+              </Button>
+            </div>
+          }
+          actions={[
+            <Tooltip title="Send Message" key="message">
+              <MessageOutlined onClick={handleContactClick}/>
+
+            </Tooltip>,
+            <Tooltip title="Download" key="download">
+              <DownloadOutlined onClick={() => handleDownloadClick(base64String)}/>
+            </Tooltip>,
+            <Tooltip title="Add Medication" key="add">
+              <PlusOutlined onClick={showInvoiceModal}/>
+            </Tooltip>,
+          ]}
+      >
+        <Meta
+            title="Ben 10"
+            description="ben@gmai.com"
+        />
       </Card>
 
       <Modal title="User Image" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>

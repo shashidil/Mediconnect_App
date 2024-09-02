@@ -27,13 +27,12 @@ function getItem(
   const items: MenuProps['items'] = [ 
   
     getItem('Home', 'grp', null, [
-      getItem('upload', '1',<MenuUnfoldOutlined />), 
+      getItem('Dashboard', '1',<MenuUnfoldOutlined />),
       getItem('Responses', '2',<MailOutlined />),
       getItem('Orders', '3',<GiftOutlined />),
-      getItem('Chat', '4',<MessageOutlined />),
-      getItem('Tracking', '5',<TruckOutlined  />)], 'group'),
+      getItem('Chat', '4',<MessageOutlined />)], 'group'),
 
-    getItem('ACCOUNT', 'grp', null, [
+    getItem('Account', 'grp', null, [
       getItem('Settings', '6',<SettingOutlined/>), 
       getItem('Logouts', '7',<LoginOutlined />),], 'group'),
 
@@ -43,8 +42,8 @@ export const PateintDashboard :React.FC= () =>{
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = parseInt(localStorage.getItem('userId') || '0', 10);
-    MedicationReminder(userId.toString())
+    // const userId = parseInt(localStorage.getItem('userId') || '0', 10);
+    // MedicationReminder(userId.toString())
   }, []); 
 
  
@@ -63,9 +62,9 @@ export const PateintDashboard :React.FC= () =>{
         case "4":
           navigate("/patient/chat");
           break;
-        case "5":
-          navigate("/patient/tracking");
-          break;
+        // case "5":
+        //   navigate("/patient/tracking");
+        //   break;
         case "6":
           navigate("/patient/settings");
           break;
@@ -83,39 +82,38 @@ export const PateintDashboard :React.FC= () =>{
 
 return(
     <>
-     <NavBar logoSrc="hjhh" appName="MediConnect" userName="User" profilePhotoSrc="gjhj" />
 
-<Layout>
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-      
-      >
-       
-        <div className="demo-logo-vertical" />
-        <Menu
-            onClick={onClick}
-            style={{ width: '100%'}}
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            mode="inline"
-            items={items}
-            theme="dark"
+<Layout style={{ minHeight: "100vh" }}>
+  <Sider
+      breakpoint="lg"
+      collapsedWidth="0"
+      onBreakpoint={(broken) => {
+        console.log(broken);
+      }}
+      onCollapse={(collapsed, type) => {
+        console.log(collapsed, type);
+      }}
+
+  >
+    <div className="logo-container" style={{padding: '30px 10px', textAlign: 'center'}}>
+      <img src="/static/media/logo.aae2efaa9818d500f11f.png" alt="Logo" style={{width: '100%', height: 'auto'}}/>
+    </div>
+    <Menu
+        onClick={onClick}
+        style={{width: '100%'}}
+        defaultSelectedKeys={['1']}
+        defaultOpenKeys={['sub1']}
+        mode="inline"
+        items={items}
+        theme="dark"
     />
-      </Sider>
+  </Sider>
 
-      
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '24px 16px 0' }}>
-          <div
-            style={{
+
+  <Layout>
+    <Content style={{margin: '24px 16px 0'}}>
+      <div
+          style={{
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,

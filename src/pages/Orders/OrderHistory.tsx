@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Spin } from 'antd';
+import { Card, Layout, Spin } from 'antd';
 import { fetchOrderHistory } from '../../services/api/OrderApi';
 import OrderHistoryComponent from '../../components/PaymentForm/OrderHistoryComponent';
-
-const { Content } = Layout;
 
 const PharmacistOrderPage: React.FC = () => {
   const [orders, setOrders] = useState([]);
@@ -12,7 +10,7 @@ const PharmacistOrderPage: React.FC = () => {
   const loadOrders = async () => {
     try {
       const pharmacistId = parseInt(localStorage.getItem('userId') || '0', 10);
-      const data = await fetchOrderHistory(pharmacistId,false);
+      const data = await fetchOrderHistory(pharmacistId, false);
       setOrders(data);
     } catch (error) {
       console.error('Failed to load pharmacist orders', error);
@@ -25,19 +23,16 @@ const PharmacistOrderPage: React.FC = () => {
     loadOrders();
   }, []);
 
-  
-
   return (
-    <Layout>
-      <Content style={{ padding: '20px' }}>
-        <h1> Order Management</h1>
-        {loading ? (
-          <Spin tip="Loading orders..." />
-        ) : (
+      <Spin spinning={loading} tip="Loading...">
+        <Card style={{ minHeight: '85vh' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <h1>Order Management</h1>
+            <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
+          </div>
           <OrderHistoryComponent orders={orders} refreshOrders={loadOrders} isPharmacist={false} />
-        )}
-      </Content>
-    </Layout>
+        </Card>
+      </Spin>
   );
 };
 

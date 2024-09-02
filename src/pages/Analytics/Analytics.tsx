@@ -86,7 +86,7 @@ export const Analytics: React.FC = () => {
     }
 
     return (
-        <Card>
+        <Card style={{ minHeight: '85vh' }}>
             <h1>Overview</h1>
             <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
             <Row gutter={[16, 16]}>

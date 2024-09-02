@@ -126,7 +126,7 @@ export const Settings: React.FC = () => {
     }
 
     return (
-        <Card>
+        <Card style={{ minHeight: '85vh' }}>
             <div style={{ marginBottom: '24px' }}>
                 <h1>Update User Details</h1>
                 <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />

@@ -141,7 +141,7 @@ export const Reports: React.FC = () => {
     };
 
     return (
-        <Card>
+        <Card style={{ minHeight: '85vh' }}>
             <h1>Reports</h1>
             <hr style={{ border: '1px solid #ddd', margin: '8px 0 40px 0' }} />
             {!isDataAvailable && <h3 style={{ textAlign: 'left' }}>Select Date Range for Reports...</h3>}

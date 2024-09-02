@@ -19,6 +19,7 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts })
   const contactText = buttonTexts?.Contact || 'Contact';
   const [isMapModalVisible, setIsMapModalVisible] = useState(false);
   const navigate = useNavigate();
+  const { Meta } = Card;
 
   const showMapModal = () => {
     setIsMapModalVisible(true);
@@ -42,50 +43,46 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts })
   };
   return (
     <>
-      <Card>
-        <div style={{ display: 'flex', textAlign: 'start', fontWeight: '500', flexDirection: 'column' }}>
-          <h4 style={{ margin: '0' }}>Pharmacist - {data.pharmacistName}</h4>
-          <h4 style={{ margin: '0' }}>Total Price: ${data.total}</h4>
-          <h4 style={{ margin: '0' }}>Distance: {data.distance} km</h4>
-          <a style={{ margin: '10px 0', cursor: 'pointer', color: '#1890ff' }}onClick={showMapModal}>
-            See more
-          </a>
-        
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', width: '35%', float: 'right' }}>
-          <Button
-            style={{
-              background: '#2e384d',
-              padding: '12px',
-              color: 'white',
-              width: '140px',
-              borderRadius: '5px',
-              fontWeight: 'bold',
-              border: '0',
-              margin: '10px'
-            }}
-            onClick={handleOrderClick}
-            >
-            {orderText}
-          </Button>
-          <Button
-            style={{
-              background: '#2e384d',
-              padding: '12px',
-              color: 'white',
-              width: '140px',
-              borderRadius: '5px',
-              fontWeight: 'bold',
-              border: '0',
-              margin: '10px'
-            }}
-            onClick={handleContactClick}
-            >
-            {contactText}
-          </Button>
-        </div>
-      </Card>
+        <Card
+            style={{ width: '400px',margin: 20,border:'solid #b6b4b4 1px'}}
+            actions={[
+                <div style={{ borderTop: '1px solid #b6b4b4',paddingTop: '10px'}} >
+                    <Button
+                        type="link"
+                        onClick={showMapModal}
+                        style={{ margin: '0 10px' }}
+                    >
+                        See More
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={handleOrderClick}
+                        style={{ margin: '0 10px' }}
+                    >
+                        {orderText}
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={handleContactClick}
+                        style={{ margin: '0 10px' }}
+                    >
+                        {contactText}
+                    </Button>
+                </div>
 
+            ]}
+        >
+            <Meta
+                title={data.pharmacistName} // Dynamic title
+                description={
+                    <div style={{color:'black'}}>
+
+                        <p>Price: {data.total}</p>
+                        <p>Distance: {data.distance} KM</p>
+                    </div>
+                }
+            />
+        </Card>
       <Modal
         title="Detailed Information"
         open={isMapModalVisible}
