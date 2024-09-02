@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Select, message, Upload, Modal } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import {Button, Select, message, Upload, Modal, Card,Input,Table,Space,Empty} from 'antd';
+import { UploadOutlined,SearchOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 
 import { fetchPharmacistsByCity, fetchPharmacistsByState ,uploadPrescription} from '../../services/api/UploadPrescriptionAPI';
 import { StatesAndCities } from '../../utils/StatesAndCities';
 import Logo from '../../assets/logo.png';
 import Img from '../../assets/obSignup.png';
+import { Col, Row} from 'antd';
+import {MedicationReminder} from "../../services/MedicationReminder";
 
 const { Option } = Select;
+const noData ='https://img.freepik.com/free-vector/push-notifications-concept-illustration_114360-4986.jpg?t=st=1725008501~exp=1725012101~hmac=d09d3e24cc9db36e1903536acd355ea1968508aadf8ae7cca109aea91d529457&w=826';
 
+interface Notification {
+  message: string;
+  timestamp: string;
+}
 
 
 export const UploadPrescription: React.FC= () => {
@@ -28,8 +35,10 @@ export const UploadPrescription: React.FC= () => {
     const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
       setUserId(parseInt(storedUserId, 10));
+      MedicationReminder(storedUserId.toString())
     }
-    
+
+
   }, []);
 
   const handleStateChange = (value: string) => {
@@ -70,7 +79,7 @@ export const UploadPrescription: React.FC= () => {
     }
 
     const pharmacistIds = pharmacists.map(pharmacist => pharmacist.id);
-    
+
     try {
       await uploadPrescription(file, userId,  pharmacistIds );
       message.success('File uploaded successfully');
@@ -96,58 +105,233 @@ export const UploadPrescription: React.FC= () => {
     },
   };
 
+  const notifications: Notification[] = [
+    {
+      message: 'Description for notification 1',
+      timestamp: '2024-08-30T12:00:00Z',
+    },
+    {
+      message: 'Description for notification 2',
+      timestamp: '2024-08-30T13:00:00Z',
+    },
+    {
+      message: 'Description for notification 1',
+      timestamp: '2024-08-30T12:00:00Z',
+    },
+    {
+      message: 'Description for notification 2',
+      timestamp: '2024-08-30T13:00:00Z',
+    },
+    {
+      message: 'Description for notification 2',
+      timestamp: '2024-08-30T13:00:00Z',
+    },
+
+    // Add more notifications as needed
+  ];
+
+  const handleSearch = (selectedKeys: React.Key[], confirm: () => void, dataIndex: string) => {
+    confirm();
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+  };
+
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}: any) => (
+        <div style={{padding: 8}}>
+          <Input
+              placeholder={`Search ${dataIndex}`}
+              value={selectedKeys[0]}
+              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              style={{width: 188, marginBottom: 8, display: 'block'}}
+          />
+          <Space>
+            <Button
+                type="primary"
+                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                size="small"
+                style={{width: 90}}
+            >
+              Search
+            </Button>
+            <Button onClick={() => handleReset(clearFilters)} size="small" style={{width: 90}}>
+              Reset
+            </Button>
+          </Space>
+        </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+        <SearchOutlined style={{color: filtered ? '#1890ff' : undefined}}/>
+    ),
+    onFilter: (value: any, record: any) =>
+        record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  });
+
+  const columns = [
+    {
+      title: 'Time',
+      dataIndex: 'timestamp',
+      key: 'timestamp',
+      ...getColumnSearchProps('timestamp'),
+      render: (timestamp: number) => {
+        // Convert timestamp to local date and time
+        const localDateTime = new Date(timestamp * 1000).toLocaleString();
+        return <span>{localDateTime}</span>;
+      }
+    },
+    {
+      title: 'Notification',
+      dataIndex: 'message',
+      key: 'message',
+      ...getColumnSearchProps('alertMessage')
+    }
+  ];
+
+  const paginationConfig = {
+    pageSize: 5
+  };
+
   return (
-    <>
-      <div style={{ marginBottom: '20px', marginTop: '20px', width: '40%' }}>
-        <img src={Logo} alt="Logo" style={{ width: '350px', height: 'auto' }} />
-      </div>
-      <div className="upload-prescription-container" style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '40%' }}>
-          <div className="dropdown-button-container" style={{ borderRadius: '50px', padding: '20px', boxShadow: '0px 0px 13px 0px #b9b6b6' }}>
-            <Select placeholder="Select State" style={{ width: '50%' }} onChange={handleStateChange}>
-              {states.map(state => (
-                <Option key={state} value={state}>{state}</Option>
-              ))}
-            </Select>
-            {selectedState && cities.length > 0 && (
-              <Select placeholder="Select City" style={{ width: '50%', marginLeft: '5%' }} onChange={handleCityChange}>
-                {cities.map(city => (
-                  <Option key={city} value={city}>{city}</Option>
-                ))}
-              </Select>
-            )}
-            <Button type="primary" onClick={handleSelectArea} style={{ marginLeft: '5%', background: '#2e384d', padding: '20px', display: 'inline-flex', alignItems: 'center' }}>
-              SELECT AREA
-            </Button>
-          </div>
+      <>
+        <Row justify="center" style={{ margin: '3% 0%' }}>
+          <img src={Logo} alt="Logo" style={{ width: '350px', height: 'auto' }} />
+        </Row>
+        <Row gutter={16} style={{ display: 'flex', alignItems: 'stretch' }}>
+          <Col span={12}>
+            <Card style={{ minHeight: '65vh',border:'1px solid #cfcfcf' }}>
 
-          <div style={{ marginTop: '10%' }}>
-            <Upload {...uploadProps}>
-              <Button style={{ background: '#2e384d', color: 'white', padding: '25px', display: 'flex', alignItems: 'center', width: '495px', justifyContent: 'center' }} icon={<UploadOutlined />}>UPLOAD PRESCRIPTION</Button>
-            </Upload>
-            <span>Or</span>
-            <Button style={{ background: '#2e384d', color: 'white', padding: '25px', display: 'flex', alignItems: 'center', width: '495px', justifyContent: 'center' }} type="primary" block>
-              INQUIRE MEDICINE
-            </Button>
-            <Button onClick={handleUpload} style={{ background: '#ff525a',marginTop:'10px', color: 'white', padding: '25px', display: 'flex', alignItems: 'center', width: '495px', justifyContent: 'center' }} type="primary" block>
-              CHECK AVAILABILITY
-            </Button>
-          </div>
-        </div>
-        <div style={{ width: '60%' }}>
-          <img src={Img} alt="Prescription Image" style={{ width: '70%', height: '400px', borderRadius: '10px' }} />
-        </div>
-      </div>
+              <div className="upload-prescription-container" style={{ alignItems: 'center' , marginTop:'30px'}}>
+                <div>
+                  {/* Dropdowns and buttons */}
+                  <div className="dropdown-button-container"
+                       style={{
+                         borderRadius: '50px',
+                         padding: '20px',
+                         boxShadow: '0px 0px 13px 0px #b9b6b6',
+                       }}
+                  >
+                    {/* Select components */}
+                    <Select placeholder="Select State" style={{ width: '50%' }} onChange={handleStateChange}>
+                      {states.map((state) => (
+                          <Option key={state} value={state}>{state}</Option>
+                      ))}
+                    </Select>
+                    {selectedState && cities.length > 0 && (
+                        <Select placeholder="Select City" style={{ width: '50%', marginLeft: '5%' }}
+                                onChange={handleCityChange}
+                        >
+                          {cities.map((city) => (
+                              <Option key={city} value={city}>{city}</Option>
+                          ))}
+                        </Select>
+                    )}
+                    <Button
+                        type="primary"
+                        onClick={handleSelectArea}
+                        style={{
+                          marginLeft: '5%',
+                          background: '#2e384d',
+                          padding: '20px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                        }}
+                    >
+                      SELECT AREA
+                    </Button>
+                  </div>
 
-      <Modal
-        title="Select Pharmacist"
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-      >
-        {pharmacists.map(pharmacist => (
-          <p key={pharmacist.id}>{pharmacist.name}</p>
-        ))}
-      </Modal>
-    </>
+                  {/* Upload and other buttons */}
+                  <div style={{ marginTop: '10%' }}>
+                    <Upload {...uploadProps}>
+                      <Button
+                          style={{
+                            background: '#2e384d',
+                            color: 'white',
+                            padding: '25px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          icon={<UploadOutlined />}
+                      >
+                        UPLOAD PRESCRIPTION
+                      </Button>
+                    </Upload>
+                    <span>Or</span>
+                    <Button
+                        style={{
+                          background: '#2e384d',
+                          color: 'white',
+                          padding: '25px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        type="primary"
+                        block
+                    >
+                      INQUIRE MEDICINE
+                    </Button>
+                    <Button
+                        onClick={handleUpload}
+                        style={{
+                          background: '#ff525a',
+                          marginTop: '10px',
+                          color: 'white',
+                          padding: '25px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        type="primary"
+                        block
+                    >
+                      CHECK AVAILABILITY
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card style={{ height: '100%', border:'1px solid #cfcfcf' }}>
+              {/* Your second card content */}
+              <h1>Notifications</h1>
+              {notifications.length !== 0 ? (
+                  <>
+                    {/*<div>Total Notifications: {notifications.length}</div>*/}
+                    <Table dataSource={notifications} columns={columns} pagination={paginationConfig} />
+                  </>
+              ) : (
+                  <>
+                    <div className="map-container map-placeholder">
+                      <div>
+                        <Empty
+                            image={noData}
+                            imageStyle={{
+                              height: 200,
+                            }}
+                            description={<span>No new notifications...</span>}
+                        />
+                      </div>
+                    </div>
+                  </>
+              )}
+            </Card>
+          </Col>
+        </Row>
+        <Modal
+            title="Select Pharmacist"
+            open={modalVisible}
+            onCancel={() => setModalVisible(false)}
+        >
+          {pharmacists.map(pharmacist => (
+              <p key={pharmacist.id}>{pharmacist.name}</p>
+          ))}
+        </Modal>
+      </>
   );
 };
