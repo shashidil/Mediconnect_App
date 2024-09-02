@@ -20,6 +20,9 @@ import {Settings} from "../pages/Settings/Settings";
 import React from "react";
 import {Reports} from "../pages/Reports/Reports";
 import {Analytics} from "../pages/Analytics/Analytics";
+import {AdminDashboard} from "../components/Dashboards/AdminDashboard";
+import {AdminInquiries} from "../pages/AdminInquiries/AdminInquiries";
+import {Inquiries} from "../pages/Inquiries/Inquiries";
 
 export const ROUTES = createBrowserRouter([
     {
@@ -33,6 +36,10 @@ export const ROUTES = createBrowserRouter([
     {
         path: "/signup",
         element:<UserRegistration/>
+    },
+    {
+        path: "",
+        element:<UserLogin/>
     },
     {
         path: "/signin",
@@ -77,6 +84,12 @@ export const ROUTES = createBrowserRouter([
                 path: "overview",
                 index: true,
                 element:<Analytics/>
+
+            },
+            {
+                path: "inquires",
+                index: true,
+                element:<Inquiries/>
 
             },
            
@@ -133,55 +146,35 @@ export const ROUTES = createBrowserRouter([
                 element:<Settings/>
 
             },
+            {
+                path: "inquires",
+                index: true,
+                element:<Inquiries/>
 
-            
-
-           
+            },
         ]
     },
 
-    // {
-    //     path: "/pharmacist",
-    //     element:<PhamacistDashboard/>,
-    //     children:[
-    //         // {
-    //         //     path: "/overveiw",
-    //         //     index: true,
-    //         //     element:<Requests/>
-    //         // },
-    //         {
-    //             path: "/request",
-    //             index: true,
-    //             element:<Requests/>
-    //         },
+    {
+        path: "/admin",
+        element:<AdminDashboard/>,
+        children:[
+            {
+                path: "",
+                index: true,
+                element:<AdminInquiries/>
+            },
+            {
+                path: "dashboard",
+                index: true,
+                element:<AdminInquiries/>
+            },
+            {
+                path: "chat",
+                index: true,
+                element:<ChatPage />
+            },
 
-    //         // {
-    //         //     path: "report",
-    //         //     index: true,
-    //         //     element:<Analytics/>
-
-    //         // },
-
-    //         // {
-    //         //     path: "overview",
-    //         //     index: true,
-    //         //     element:<Overview />
-
-    //         // },
-
-    //         // {
-    //         //     path: "orders",
-    //         //     index: true,
-    //         //     element:<Orders />
-
-    //         // },
-
-    //         // {
-    //         //     path: "requests",
-    //         //     index: true,
-    //         //     element:<Requests />
-
-    //         // },
-    //     ]
-    // },
+        ]
+    },
 ]);

@@ -1,10 +1,8 @@
 import React,{useEffect} from "react";
-import { MessageOutlined, TruckOutlined , SettingOutlined,LoginOutlined ,MenuUnfoldOutlined ,MailOutlined,GiftOutlined } from '@ant-design/icons';
+import { MessageOutlined, SettingOutlined,LoginOutlined ,MenuUnfoldOutlined ,MailOutlined,GiftOutlined,QuestionCircleOutlined  } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu,Layout, theme } from 'antd';
 import {Outlet,useNavigate} from "react-router-dom";
-import NavBar from "../NavBar/NavBar";
-import { MedicationReminder } from "../../services/MedicationReminder";
 const { Header, Footer, Sider, Content } = Layout; 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -30,7 +28,8 @@ function getItem(
       getItem('Dashboard', '1',<MenuUnfoldOutlined />),
       getItem('Responses', '2',<MailOutlined />),
       getItem('Orders', '3',<GiftOutlined />),
-      getItem('Chat', '4',<MessageOutlined />)], 'group'),
+      getItem('Chat', '4',<MessageOutlined />),
+      getItem('Support', '5',<QuestionCircleOutlined />)], 'group'),
 
     getItem('Account', 'grp', null, [
       getItem('Settings', '6',<SettingOutlined/>), 
@@ -62,9 +61,9 @@ export const PateintDashboard :React.FC= () =>{
         case "4":
           navigate("/patient/chat");
           break;
-        // case "5":
-        //   navigate("/patient/tracking");
-        //   break;
+        case "5":
+          navigate("/patient/inquires");
+          break;
         case "6":
           navigate("/patient/settings");
           break;

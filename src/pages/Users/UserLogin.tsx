@@ -27,6 +27,8 @@ export const UserLogin: React.FC = () => {
           window.location.href = '/pharmacist/overview';
         } else if (roles.includes('ROLE_CUSTOMER')) {
           window.location.href = 'patient/upload';
+        } else if (roles.includes('ROLE_ADMIN')) {
+          window.location.href = 'admin/dashboard';
         } else {
           notification.error({
             message: 'Error',

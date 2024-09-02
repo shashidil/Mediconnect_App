@@ -5,7 +5,7 @@ import {
     MenuUnfoldOutlined,
     MailOutlined,
     DollarOutlined,
-    MessageOutlined
+    MessageOutlined, QuestionCircleOutlined
 } from '@ant-design/icons';
 import type {MenuProps} from 'antd';
 import {Menu, Layout, theme} from 'antd';
@@ -40,11 +40,12 @@ const items: MenuProps['items'] = [
             getItem('Payment', '3', <DollarOutlined/>),
             getItem('Reports', '4', <LineChartOutlined/>),
             // getItem('Chat', '5',<MessageOutlined />),
-            getItem('Chat', '5', <MessageOutlined/>)], 'group'),
+            getItem('Chat', '5', <MessageOutlined/>),
+            getItem('Support', '6',<QuestionCircleOutlined />)], 'group'),
 
     getItem('Account', 'grp', null, [
-        getItem('Setting', '6', <SettingOutlined/>),
-        getItem('Logout', '7', <LoginOutlined/>),], 'group'),
+        getItem('Setting', '7', <SettingOutlined/>),
+        getItem('Logout', '8', <LoginOutlined/>),], 'group'),
 
 ];
 
@@ -72,6 +73,9 @@ export const PhamacistDashboard = () => {
                 navigate("/pharmacist/chat");
                 break;
             case "6":
+                navigate("/pharmacist/inquires");
+                break;
+            case "7":
                 navigate("/pharmacist/settings");
                 break;
 
