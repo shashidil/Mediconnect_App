@@ -43,6 +43,13 @@ export const AdminDashboard: React.FC = () => {
             case "2":
                 navigate("/admin/chat");
                 break;
+            case "3":
+                localStorage.removeItem("user");
+                localStorage.removeItem("userId");
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("sessionExpiration");
+                navigate("/signin");
+                break;
             default:
                 break;
         }

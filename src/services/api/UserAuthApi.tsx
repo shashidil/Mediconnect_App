@@ -31,7 +31,9 @@ export async function loginUser(loginDto: SigninDto) {
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
         localStorage.setItem('userId', response.data.id);
-        localStorage.setItem('accessToken', response.data.token);  // Save the token correctly
+        localStorage.setItem('accessToken', response.data.token);
+        const expirationTime = (new Date().getTime() + 3600000).toString();
+        localStorage.setItem("sessionExpiration", expirationTime);
       }
   
       return response.data;

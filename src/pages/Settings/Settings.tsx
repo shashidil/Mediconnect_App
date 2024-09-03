@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, Input, Button, Row, Col, notification, Spin } from 'antd';
-import {GetStripeAccount, GetUserData, UpdateStripeAccount} from "../../services/api/UserSettingsAPI";
+import {GetStripeAccount, GetUserData, SetStripeAccount, UpdateStripeAccount} from "../../services/api/UserSettingsAPI";
 import { UpdateUserData } from "../../services/api/UserSettingsAPI"; // Import the update function
 
 export const Settings: React.FC = () => {
@@ -12,6 +12,7 @@ export const Settings: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [updateLoading, setUpdateLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [stripeButtonClicked, setStripeButtonClicked] = useState('');
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -92,17 +93,27 @@ export const Settings: React.FC = () => {
         try {
             const userId = localStorage.getItem('userId');
             if (userId) {
-                await UpdateStripeAccount(Number(userId), values.stripeEmail);
-                notification.success({
-                    message: 'Update Successful',
-                    description: 'The stripe account has been updated successfully..',
-                });
+                if(stripeButtonClicked ==='add'){
+                    await SetStripeAccount(Number(userId), values.stripeEmail);
+                    notification.success({
+                        message: 'Successful',
+                        description: 'The stripe account has been added successfully..',
+                    });
+                }
+                else{
+                    await UpdateStripeAccount(Number(userId), values.stripeEmail);
+                    notification.success({
+                        message: 'Update Successful',
+                        description: 'The stripe account has been updated successfully..',
+                    });
+                }
+
             }
         } catch (error) {
             console.error('Failed to stripe account:', error);
             notification.error({
-                message: 'Update Failed',
-                description: 'Failed to update stripe account. Please try again.',
+                message: 'Failed',
+                description: 'Failed to complete. Please try again.',
             });
         } finally {
             setUpdateLoading(false); // Hide spinner after updating
@@ -142,9 +153,8 @@ export const Settings: React.FC = () => {
                         <Form.Item
                             label="Username"
                             name="username"
-                            rules={[{ required: true, message: 'Please enter the username' }]}
                         >
-                            <Input />
+                            <Input disabled />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -254,24 +264,33 @@ export const Settings: React.FC = () => {
                     <Form
                         form={stripeForm}
                         layout="vertical"
-                        onFinish={handleStripeFormSubmit}
                         initialValues={stripeFormData}
+                        onFinish={handleStripeFormSubmit}
                     >
                         <Row gutter={16} align="bottom">
                             <Col span={18}>
                                 <Form.Item
                                     label="Stripe Email"
                                     name="stripeEmail"
-                                    rules={[{ required: true, message: 'Please enter the Stripe email' }]}
+                                    rules={[
+                                        { required: true, message: 'Please enter the Stripe email' }, // Required field rule
+                                        { type: 'email', message: 'Please enter a valid email address' }, // Email validation rule
+                                    ]}
                                 >
                                     <Input />
                                 </Form.Item>
                             </Col>
                             <Col span={6}>
                                 <Form.Item style={{ textAlign: 'right', marginLeft: '20px' }}>
-                                    <Button type="primary" htmlType="submit">
-                                        Update Stripe Email
-                                    </Button>
+                                    {stripeFormData.stripeEmail === '' ? (
+                                        <Button type="primary" htmlType="submit" onClick={()=>setStripeButtonClicked('add')}> {/* Make this button a submit button */}
+                                            Add Stripe Email
+                                        </Button>
+                                    ) : (
+                                        <Button type="primary" htmlType="submit" onClick={()=>setStripeButtonClicked('update')}> {/* Make this button a submit button */}
+                                            Update Stripe Email
+                                        </Button>
+                                    )}
                                 </Form.Item>
                             </Col>
                         </Row>

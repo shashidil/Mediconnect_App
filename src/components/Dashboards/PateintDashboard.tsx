@@ -33,7 +33,7 @@ function getItem(
 
     getItem('Account', 'grp', null, [
       getItem('Settings', '6',<SettingOutlined/>), 
-      getItem('Logouts', '7',<LoginOutlined />),], 'group'),
+      getItem('Logout', '7',<LoginOutlined />),], 'group'),
 
   ];
  
@@ -68,7 +68,11 @@ export const PateintDashboard :React.FC= () =>{
           navigate("/patient/settings");
           break;
         case "7":
-          navigate("/logout");
+          localStorage.removeItem("user");
+          localStorage.removeItem("userId");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("sessionExpiration");
+          navigate("/signin");
           break;
         default:
           break;

@@ -186,8 +186,8 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
           ]}
       >
         <Meta
-            title="Ben 10"
-            description="ben@gmai.com"
+            title={data.user.name}
+            description={data.user.email}
         />
       </Card>
 

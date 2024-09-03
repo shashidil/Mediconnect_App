@@ -48,6 +48,21 @@ export const GetStripeAccount  = async (userId: number) => {
 
 export const UpdateStripeAccount = async (userId: number, email: string) => {
     try {
+        const response = await axiosInstance.put(`/api/pharmacist-account/${userId}?email=${email}`);
+        return response.data;
+    } catch (error: any) {
+        console.error("Error updating user data:", error);
+
+        if (error.response && error.response.data) {
+            return error.response.data;
+        }
+
+        throw error;
+    }
+};
+
+export const SetStripeAccount = async (userId: number, email: string) => {
+    try {
         const response = await axiosInstance.post(`/api/pharmacist-account?email=${email}&pharmacistId=${userId}`);
         return response.data;
     } catch (error: any) {

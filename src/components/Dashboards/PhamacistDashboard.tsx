@@ -44,7 +44,7 @@ const items: MenuProps['items'] = [
             getItem('Support', '6',<QuestionCircleOutlined />)], 'group'),
 
     getItem('Account', 'grp', null, [
-        getItem('Setting', '7', <SettingOutlined/>),
+        getItem('Settings', '7', <SettingOutlined/>),
         getItem('Logout', '8', <LoginOutlined/>),], 'group'),
 
 ];
@@ -79,9 +79,13 @@ export const PhamacistDashboard = () => {
                 navigate("/pharmacist/settings");
                 break;
 
-            // case "7":
-            //   navigate("/logout");
-            //   break;
+            case "8":
+                localStorage.removeItem("user");
+                localStorage.removeItem("userId");
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("sessionExpiration");
+                navigate("/signin");
+                break;
             default:
                 break;
 

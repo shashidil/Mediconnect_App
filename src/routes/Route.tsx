@@ -1,15 +1,12 @@
-
-import {BaseLayout} from "../layout/BaseLayout/BaseLayout";
-import {Error403} from "../pages/commonError/Error403";
-import {Error401} from "../pages/commonError/Error401";
+import {InvalidURL} from "../pages/commonError/InvalidURL";
+import {Unauthorized} from "../pages/commonError/Unauthorized";
 import {createBrowserRouter} from "react-router-dom";
-import {Dashboard} from "../pages/dashboard/Dashboard";
 import {UserRegistration} from "../pages/Users/UserRegistration";
-import { PateintDashboard } from "../components/Dashboards/PateintDashboard";
-import { PhamacistDashboard } from "../components/Dashboards/PhamacistDashboard";
-import { UploadPrescription } from "../pages/UploadPriscription/UploadPrescription";
-import { Responses } from "../pages/Responses/Responses";
-import { UserLogin } from "../pages/Users/UserLogin";
+import {PateintDashboard} from "../components/Dashboards/PateintDashboard";
+import {PhamacistDashboard} from "../components/Dashboards/PhamacistDashboard";
+import {UploadPrescription} from "../pages/UploadPriscription/UploadPrescription";
+import {Responses} from "../pages/Responses/Responses";
+import {UserLogin} from "../pages/Users/UserLogin";
 import Overview from './../pages/Overview/Overview';
 import Orders from "../pages/Orders/Orders";
 import Requests from "../pages/Requests/Requests";
@@ -23,158 +20,248 @@ import {Analytics} from "../pages/Analytics/Analytics";
 import {AdminDashboard} from "../components/Dashboards/AdminDashboard";
 import {AdminInquiries} from "../pages/AdminInquiries/AdminInquiries";
 import {Inquiries} from "../pages/Inquiries/Inquiries";
+import SessionCheck from "../services/SessionCheck";
+import RoleBasedRoute from "../services/RoleBasedRoute";
 
 export const ROUTES = createBrowserRouter([
     {
-        path: "/error-403",
-        element: <Error403 />,
+        path: "*",
+        element: <InvalidURL/>,
     },
     {
-        path: "/error-401",
-        element: <Error401 />,
+        path: "/unauthorized",
+        element: <Unauthorized/>,
     },
     {
         path: "/signup",
-        element:<UserRegistration/>
+        element: <UserRegistration/>
     },
     {
         path: "",
-        element:<UserLogin/>
+        element: <UserLogin/>
     },
     {
         path: "/signin",
-        element:<UserLogin/>
+        element: <UserLogin/>
     },
     {
         path: "/pharmacist",
-        element: <PhamacistDashboard />,
+        element: (
+            <RoleBasedRoute requiredRole="ROLE_PHARMACIST">
+                <PhamacistDashboard/>
+            </RoleBasedRoute>
+        ),
         children: [
 
             {
                 path: "requests",
                 index: true,
-                element:<Requests />
+                element: <>
+                    <SessionCheck/>
+                    <Requests/>
+                </>
 
             },
             {
                 path: "chat",
                 index: true,
-                element:<ChatPage />
+                element: <>
+                    <SessionCheck/>
+                    <ChatPage/>
+                </>
 
             },
             {
                 path: "Payment",
                 index: true,
-                element:<PharmacistOrderPage />
+                element: <>
+                    <SessionCheck/>
+                    <PharmacistOrderPage/>
+                </>
 
             },
             {
                 path: "settings",
                 index: true,
-                element:<Settings/>
+                element: <>
+                    <SessionCheck/>
+                    <Settings/>
+                </>
 
             },
             {
                 path: "reports",
                 index: true,
-                element:<Reports/>
+                element: <>
+                    <SessionCheck/>
+                    <Reports/>
+                </>
 
             },
             {
                 path: "overview",
                 index: true,
-                element:<Analytics/>
+                element: <>
+                    <SessionCheck/>
+                    <Analytics/>
+                </>
+
+            },
+            {
+                path: "",
+                index: true,
+                element: <>
+                    <SessionCheck/>
+                    <Analytics/>
+                </>
 
             },
             {
                 path: "inquires",
                 index: true,
-                element:<Inquiries/>
+                element: <>
+                    <SessionCheck/>
+                    <Inquiries/>
+                </>
 
             },
-           
+
 
         ]
     }
-,
+    ,
 
     {
         path: "/patient",
-        element:<PateintDashboard/>,
-        children:[
+        element: (
+            <RoleBasedRoute requiredRole="ROLE_CUSTOMER">
+                <PateintDashboard/>
+            </RoleBasedRoute>
+        ),
+        children: [
             {
                 path: "upload",
                 index: true,
-                element:<UploadPrescription/>
+                element: <>
+                    <SessionCheck/>
+                    <UploadPrescription/>
+                </>
+            },
+            {
+                path: "",
+                index: true,
+                element: <>
+                    <SessionCheck/>
+                    <UploadPrescription/>
+                </>
             },
 
             {
                 path: "response",
                 index: true,
-                element:<Responses/>
+                element: <>
+                    <SessionCheck/>
+                    <Responses/>
+                </>
 
             },
 
             {
                 path: "overview",
                 index: true,
-                element:<Overview />
+                element: <>
+                    <SessionCheck/>
+                    <Overview/>
+                </>
 
             },
 
             {
                 path: "orders",
                 index: true,
-                element:<Orders />
+                element: <>
+                    <SessionCheck/>
+                    <Orders/>
+                </>
 
             },
             {
                 path: "chat",
                 index: true,
-                element:<ChatPage />
+                element: <>
+                    <SessionCheck/>
+                    <ChatPage/>
+                </>
 
             },
             {
                 path: "ordersHistory",
                 index: true,
-                element:<OrderHistory />
+                element: <>
+                    <SessionCheck/>
+                    <OrderHistory/>
 
+                </>
             },
             {
                 path: "settings",
                 index: true,
-                element:<Settings/>
+                element: <>
+                    <SessionCheck/>
+                    <Settings/>
+                </>
 
             },
             {
                 path: "inquires",
                 index: true,
-                element:<Inquiries/>
+                element: <>
+                    <SessionCheck/>
+                    <Inquiries/>
+                </>
 
             },
         ]
     },
 
     {
-        path: "/admin",
-        element:<AdminDashboard/>,
-        children:[
+        path: '/admin',
+        element: (
+            <RoleBasedRoute requiredRole="ROLE_ADMIN">
+                <AdminDashboard/>
+            </RoleBasedRoute>
+        ),
+        children: [
             {
-                path: "",
+                path: '',
                 index: true,
-                element:<AdminInquiries/>
+                element: (
+                    <>
+                        <SessionCheck/>
+                        <AdminInquiries/>
+                    </>
+                ),
             },
             {
-                path: "dashboard",
+                path: 'dashboard',
                 index: true,
-                element:<AdminInquiries/>
+                element: (
+                    <>
+                        <SessionCheck/>
+                        <AdminInquiries/>
+                    </>
+                ),
             },
             {
-                path: "chat",
+                path: 'chat',
                 index: true,
-                element:<ChatPage />
+                element: (
+                    <>
+                        <SessionCheck/>
+                        <ChatPage/>
+                    </>
+                ),
             },
-
-        ]
+        ],
     },
 ]);
