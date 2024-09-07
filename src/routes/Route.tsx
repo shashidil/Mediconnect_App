@@ -23,6 +23,8 @@ import {Inquiries} from "../pages/Inquiries/Inquiries";
 import SessionCheck from "../services/SessionCheck";
 import RoleBasedRoute from "../services/RoleBasedRoute";
 
+
+
 export const ROUTES = createBrowserRouter([
     {
         path: "*",
@@ -181,7 +183,7 @@ export const ROUTES = createBrowserRouter([
                 index: true,
                 element: <>
                     <SessionCheck/>
-                    <Orders/>
+                    {/* <Orders onOrderSuccess={} /> */}
                 </>
 
             },

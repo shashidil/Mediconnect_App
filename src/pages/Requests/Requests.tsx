@@ -16,7 +16,7 @@ const Requests: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const loadUsers = async () => {
+    const loadPrescriptions = async () => {
       if (userId !== null) {
         try {
           setLoading(true);
@@ -29,37 +29,46 @@ const Requests: React.FC = () => {
         }
       }
     };
-    loadUsers();
+    loadPrescriptions();
   }, [userId]);
+
+  // Function to remove a request card from the list after successful invoice submission
+  const handleRemoveRequest = (id: number) => {
+    setResponsesData(prevData => prevData.filter(request => request.id !== id));
+  };
 
   if (loading) {
     return (
-        <div style={{ textAlign: 'center', padding: '50px', minHeight: '500px' }}>
-          <Spin size="large" />
-        </div>
+      <div style={{ textAlign: 'center', padding: '50px', minHeight: '500px' }}>
+        <Spin size="large" />
+      </div>
     );
   }
 
   return (
-      <Card style={{ minHeight: '85vh' }}>
-        <div style={{ marginBottom: '24px' }}>
-          <h1>Requests</h1>
-          <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
-        </div>
-        {responsesData.length === 0 ? (
-            <Empty
-                description={<span>No Requests Available</span>}
-                style={{ textAlign: 'center', marginTop: '20vh' }}
+    <Card style={{ minHeight: '85vh' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1>Requests</h1>
+        <hr style={{ border: '1px solid #ddd', margin: '8px 0' }} />
+      </div>
+      {responsesData.length === 0 ? (
+        <Empty
+          description={<span>No Requests Available</span>}
+          style={{ textAlign: 'center', marginTop: '20vh' }}
+        />
+      ) : (
+        <Row gutter={16} justify="center">
+          {responsesData.map((data, index) => (
+            <RequestCard 
+              key={index} 
+              data={data} 
+              onInvoiceSuccess={handleRemoveRequest}  // Pass the removal handler to each RequestCard
             />
-        ) : (
-            <Row gutter={16} justify="center">
-              {responsesData.map((data, index) => (
-                  <RequestCard key={index} data={data} />
-              ))}
-            </Row>
-        )}
-      </Card>
+          ))}
+        </Row>
+      )}
+    </Card>
   );
-}
+};
 
 export default Requests;

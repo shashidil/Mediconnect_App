@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import { Button, Card, Modal } from 'antd';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
-import{ResponseData} from "../../Interfaces/ResposeData"
+import { ResponseData } from "../../Interfaces/ResposeData";
 import 'leaflet-routing-machine';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
-
-
 interface ResponseCardProps {
   data: ResponseData;
   buttonTexts?: { Order: string; Contact: string };
+  onOrderSuccess: (invoiceNumber: number) => void; // Prop to remove response on order success
 }
 
-export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts }) => {
+export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts, onOrderSuccess }) => {
   const orderText = buttonTexts?.Order || 'Order';
   const contactText = buttonTexts?.Contact || 'Contact';
   const [isMapModalVisible, setIsMapModalVisible] = useState(false);
@@ -34,55 +33,55 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts })
   };
 
   const handleOrderClick = () => {
-    navigate('/patient/orders', { state: data });
-    
+    // Navigate to the orders page without passing onOrderSuccess in location.state
+    navigate('/patient/orders', { state: { ...data } });
   };
+
   const handleContactClick = () => {
     navigate('/patient/chat', { state: { name: data.pharmacistName, id: data.pharmacistId } });
-    //console.log(data.pharmacistName);
   };
+
   return (
     <>
-        <Card
-            style={{ width: '400px',margin: 20,border:'solid #b6b4b4 1px'}}
-            actions={[
-                <div style={{ borderTop: '1px solid #b6b4b4',paddingTop: '10px'}} >
-                    <Button
-                        type="link"
-                        onClick={showMapModal}
-                        style={{ margin: '0 10px' }}
-                    >
-                        See More
-                    </Button>
-                    <Button
-                        type="primary"
-                        onClick={handleOrderClick}
-                        style={{ margin: '0 10px' }}
-                    >
-                        {orderText}
-                    </Button>
-                    <Button
-                        type="primary"
-                        onClick={handleContactClick}
-                        style={{ margin: '0 10px' }}
-                    >
-                        {contactText}
-                    </Button>
-                </div>
+      <Card
+        style={{ width: '400px', margin: 20, border: 'solid #b6b4b4 1px' }}
+        actions={[
+          <div style={{ borderTop: '1px solid #b6b4b4', paddingTop: '10px' }}>
+            <Button
+              type="link"
+              onClick={showMapModal}
+              style={{ margin: '0 10px' }}
+            >
+              See More
+            </Button>
+            <Button
+              type="primary"
+              onClick={handleOrderClick}
+              style={{ margin: '0 10px' }}
+            >
+              {orderText}
+            </Button>
+            <Button
+              type="primary"
+              onClick={handleContactClick}
+              style={{ margin: '0 10px' }}
+            >
+              {contactText}
+            </Button>
+          </div>
+        ]}
+      >
+        <Meta
+          title={data.pharmacistName} // Dynamic title
+          description={
+            <div style={{ color: 'black' }}>
+              <p>Price: {data.total}</p>
+              <p>Distance: {data.distance} KM</p>
+            </div>
+          }
+        />
+      </Card>
 
-            ]}
-        >
-            <Meta
-                title={data.pharmacistName} // Dynamic title
-                description={
-                    <div style={{color:'black'}}>
-
-                        <p>Price: {data.total}</p>
-                        <p>Distance: {data.distance} KM</p>
-                    </div>
-                }
-            />
-        </Card>
       <Modal
         title="Detailed Information"
         open={isMapModalVisible}
@@ -95,7 +94,7 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts })
         <h4>Total Price: ${data.total}</h4>
         <h4>Distance: {data.distance} km</h4>
         <h4>Additional Notes: {data.additionalNotes || 'None'}</h4>
-        
+
         <h4>Medications:</h4>
         <ul>
           {data.medications.map((medication, index) => (

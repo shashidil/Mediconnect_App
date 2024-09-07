@@ -3,7 +3,7 @@ import {Button, Select, message, Upload, Modal, Card,Input,Table,Space,Empty} fr
 import { UploadOutlined,SearchOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 
-import { fetchPharmacistsByCity, fetchPharmacistsByState ,uploadPrescription} from '../../services/api/UploadPrescriptionAPI';
+import { fetchPharmacistsByCity, fetchPharmacistsByState ,uploadPrescription,inquireMedicine} from '../../services/api/UploadPrescriptionAPI';
 import { StatesAndCities } from '../../utils/StatesAndCities';
 import Logo from '../../assets/logo.png';
 import Img from '../../assets/obSignup.png';
@@ -28,6 +28,9 @@ export const UploadPrescription: React.FC= () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
+  const [inquireModalVisible, setInquireModalVisible] = useState(false); 
+  const [medicationName, setMedicationName] = useState<string>(''); 
+  const [medicationQuantity, setMedicationQuantity] = useState<number>(0);
 
   useEffect(() => {
     const statesData = StatesAndCities.getStates();
@@ -43,7 +46,7 @@ export const UploadPrescription: React.FC= () => {
 
   const handleStateChange = (value: string) => {
     setSelectedState(value);
-    setSelectedCity(null); // Reset city selection
+    setSelectedCity(null); 
     const citiesData = StatesAndCities.getCities(value);
     setCities(citiesData);
   };
@@ -69,6 +72,22 @@ export const UploadPrescription: React.FC= () => {
       setModalVisible(true);
     } catch (error) {
       message.error('Failed to fetch pharmacists');
+    }
+  };
+
+  const handleInquireMedicine = async () => {
+    if (!medicationName || medicationQuantity <= 0 || !userId) {
+      message.error('Please provide valid medication details');
+      return;
+    }
+
+    try {
+      const pharmacistIds = pharmacists.map(pharmacist => pharmacist.id);
+      await inquireMedicine(userId, medicationName, medicationQuantity, pharmacistIds);
+      message.success('Medicine inquiry sent successfully');
+      setInquireModalVisible(false); 
+    } catch (error) {
+      message.error('Medicine inquiry failed');
     }
   };
 
@@ -98,7 +117,7 @@ export const UploadPrescription: React.FC= () => {
         return Upload.LIST_IGNORE;
       }
       setFile(file);
-      return false; // Prevent automatic upload by Ant Design
+      return false; 
     },
     onRemove: () => {
       setFile(null);
@@ -262,6 +281,7 @@ export const UploadPrescription: React.FC= () => {
                     </Upload>
                     <span>Or</span>
                     <Button
+                        onClick={() => setInquireModalVisible(true)}
                         style={{
                           background: '#2e384d',
                           color: 'white',
@@ -275,6 +295,29 @@ export const UploadPrescription: React.FC= () => {
                     >
                       INQUIRE MEDICINE
                     </Button>
+
+                    <Modal
+        title="Inquire Medicine"
+        open={inquireModalVisible}
+        onCancel={() => setInquireModalVisible(false)}
+        onOk={handleInquireMedicine}
+        okText="Submit"
+      >
+        <Input
+          placeholder="Medication Name"
+          value={medicationName}
+          onChange={(e) => setMedicationName(e.target.value)}
+          style={{ marginBottom: '10px' }}
+        />
+        <Input
+          placeholder="Medication Quantity"
+          type="number"
+          value={medicationQuantity}
+          onChange={(e) => setMedicationQuantity(parseInt(e.target.value, 10))}
+          style={{ marginBottom: '10px' }}
+        />
+      </Modal>
+
                     <Button
                         onClick={handleUpload}
                         style={{
