@@ -13,7 +13,6 @@ interface ChatWindowProps {
 const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
   const [message, setMessage] = useState('');
   const loggedInUserId = parseInt(localStorage.getItem('userId') || '0', 10);
-  const loggedInUsername = localStorage.getItem('user.username') || '';
 
   const handleSendMessage = () => {
     const chatMessage = {
@@ -26,39 +25,49 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '16px', backgroundColor: '#f0f0f0' }}>
-      <List
-  dataSource={messages}
-  renderItem={(msg) => (
-    <List.Item
-      style={{
-        display: 'flex',
-        justifyContent: msg.sender.id === loggedInUserId ? 'flex-end' : 'flex-start',
-        alignItems: 'center',
-      }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      {/* Chat messages container */}
       <div
         style={{
-          maxWidth: '60%',
-          padding: '10px',
-          borderRadius: '8px',
-          backgroundColor: msg.sender.id === loggedInUserId ? '#d9f7be' : '#fff',
-          textAlign: msg.sender.id === loggedInUserId ? 'right' : 'left',
-          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+          flexGrow: 1,
+          padding: '16px',
+          backgroundColor: '#f0f0f0',
+          overflowY: 'auto',  // Enables vertical scrolling
+          maxHeight: '70vh',  // Limit the height of the chat window
         }}
       >
-        <Text strong>{msg.sender.id === loggedInUserId ? 'You' : msg.sender.name}</Text>
-        <div>{msg.content}</div>
+        <List
+          dataSource={messages}
+          renderItem={(msg) => (
+            <List.Item
+              style={{
+                display: 'flex',
+                justifyContent: msg.sender.id === loggedInUserId ? 'flex-end' : 'flex-start',
+                alignItems: 'center',
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: '60%',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  backgroundColor: msg.sender.id === loggedInUserId ? '#d9f7be' : '#fff',
+                  textAlign: msg.sender.id === loggedInUserId ? 'right' : 'left',
+                  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <Text strong>{msg.sender.id === loggedInUserId ? 'You' : msg.sender.name}</Text>
+                <div>{msg.content}</div>
+              </div>
+            </List.Item>
+          )}
+        />
       </div>
-    </List.Item>
-  )}
-/>
 
-      </div>
+      {/* Message input area */}
       <div style={{ padding: '16px', backgroundColor: '#fff' }}>
         <TextArea
-          rows={4}
+          rows={3}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."

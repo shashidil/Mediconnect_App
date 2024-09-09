@@ -89,6 +89,9 @@ export const Inquiries: React.FC = () => {
                         </Form.Item>
                         <Form.Item>
                             <Button
+                            style={{
+                                background: '#2e384d',
+                                color: 'white',}}
                                 type="primary"
                                 htmlType="submit"
                                 disabled={!isFormValid || loading}

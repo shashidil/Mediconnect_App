@@ -22,6 +22,8 @@ import {AdminInquiries} from "../pages/AdminInquiries/AdminInquiries";
 import {Inquiries} from "../pages/Inquiries/Inquiries";
 import SessionCheck from "../services/SessionCheck";
 import RoleBasedRoute from "../services/RoleBasedRoute";
+import ForgotPassword from "../pages/Users/ForgotPassword";
+import ResetPassword from "../pages/Users/ResetPassword";
 
 
 
@@ -45,6 +47,14 @@ export const ROUTES = createBrowserRouter([
     {
         path: "/signin",
         element: <UserLogin/>
+    },
+    {
+        path: "/forgot-password",
+        element: <ForgotPassword/>
+    },
+    {
+        path: "/reset-password",
+        element: <ResetPassword/>
     },
     {
         path: "/pharmacist",
@@ -183,7 +193,7 @@ export const ROUTES = createBrowserRouter([
                 index: true,
                 element: <>
                     <SessionCheck/>
-                    {/* <Orders onOrderSuccess={} /> */}
+                    <Orders/>
                 </>
 
             },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Card, Button, Form, Input, notification, Tooltip } from 'antd';
+import { Modal, Card, Button, Form, Input, notification, Tooltip, Row, Col } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { MessageOutlined, PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 import { SendInvoice } from '../../services/api/InvoiceAPI';
@@ -153,7 +153,6 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts, onI
         style={{ width: 200, margin: 20 }}
         cover={
           base64String ? (
-            // Render image if base64String is available
             <div style={{ position: 'relative' }}>
               <img
                 alt="example"
@@ -166,6 +165,8 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts, onI
                   position: 'absolute',
                   bottom: 10,
                   right: 10,
+                  background: '#2e384d',
+                  color: 'white',
                 }}
                 onClick={showModal}
               >
@@ -207,53 +208,66 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts, onI
         )}
       </Modal>
 
-      {/* Add Medication Modal */}
+      {/* Add Medication Modal with Prescription Image on Left */}
       <Modal title="Add Medication" open={isInvoiceModalOpen} onOk={handleInvoiceOk} onCancel={handleInvoiceCancel} footer={null}>
-        <Form layout="vertical" form={form}>
-          <Form.Item
-            label="Medication Name"
-            name="medicationName"
-            rules={[{ required: true, message: 'Please input the medication name!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Medication Dosage"
-            name="medicationDosage"
-            rules={[{ required: true, message: 'Please input the medication dosage!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Days"
-            name="days"
-            rules={[{ required: true, message: 'Please input the number of days!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Medication Quantity"
-            name="medicationQuantity"
-            rules={[{ required: true, message: 'Please input the medication quantity!' }]}
-          >
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item
-            label="Amount"
-            name="amount"
-            rules={[{ required: true, message: 'Please input the amount!' }]}
-          >
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="dashed" onClick={addMedication} block icon={<PlusOutlined />}>
-              Add Medication
+        <Row gutter={16}>
+          <Col span={8}>
+            {base64String ? (
+              <img src={base64String} alt={data.fileName || 'Prescription Image'} style={{ width: '100%', borderRadius: '8px' }} />
+            ) : (
+              <div style={{ textAlign: 'center', padding: '10px' }}>No image available.</div>
+            )}
+          </Col>
+          <Col span={16}>
+            <Form layout="vertical" form={form}>
+              <Form.Item
+                label="Medication Name"
+                name="medicationName"
+                rules={[{ required: true, message: 'Please input the medication name!' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Medication Dosage"
+                name="medicationDosage"
+                rules={[{ required: true, message: 'Please input the medication dosage!' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Days"
+                name="days"
+                rules={[{ required: true, message: 'Please input the number of days!' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Medication Quantity"
+                name="medicationQuantity"
+                rules={[{ required: true, message: 'Please input the medication quantity!' }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item
+                label="Amount"
+                name="amount"
+                rules={[{ required: true, message: 'Please input the amount!' }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="dashed" onClick={addMedication} block icon={<PlusOutlined />}>
+                  Add Medication
+                </Button>
+              </Form.Item>
+            </Form>
+            <Button type="primary" 
+              style={{ background: '#2e384d', color: 'white', marginTop: '10px' }}
+              onClick={() => setIsFinalInvoiceModalOpen(true)} block>
+              View Final Invoice
             </Button>
-          </Form.Item>
-        </Form>
-        <Button type="primary" onClick={() => setIsFinalInvoiceModalOpen(true)} block>
-          View Final Invoice
-        </Button>
+          </Col>
+        </Row>
       </Modal>
 
       {/* Final Invoice Modal */}
@@ -273,7 +287,9 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts, onI
         ) : (
           <p>No medications added.</p>
         )}
-        <Button type="primary" onClick={onFinish} block>
+        <Button type="primary" 
+          style={{ background: '#2e384d', color: 'white' }}
+          onClick={onFinish} block>
           Submit Invoice
         </Button>
       </Modal>

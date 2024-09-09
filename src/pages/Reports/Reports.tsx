@@ -155,7 +155,7 @@ export const Reports: React.FC = () => {
                 type="primary"
                 onClick={getReports}
                 disabled={isButtonDisabled}
-                style={{ marginTop: '16px' }}
+                style={{ marginTop: '16px',background: '#2e384d',color: 'white', }}
                 loading={loading}
             >
                 Get Reports

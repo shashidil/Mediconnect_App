@@ -1,23 +1,23 @@
 import axios from 'axios';
-import {BASE_URL} from "../../Constants/Index";
 
+const VERIFY_URL = "http://localhost:8080/api/checkRegNumber";  
 export async function checkRegNumber(regNumber: string): Promise<boolean> {
-    
-
     try {
-        const response = await axios.post(`${BASE_URL}/api/checkRegNumber`, null, {
-            params: { regNumber },
+        const response = await axios.post(VERIFY_URL, null, {
+            params: {
+                regNumber: regNumber
+            }
         });
 
-        if(response.data){
-            return true;
+        const data = response.data;
+
+        if (data && data.reg_no === regNumber) {
+            return true;  
         }
-else{
-    
-}
-        return false;
+
+        return false;  
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error validating registration number:', error);
         throw new Error('Failed to validate registration number');
     }
 }

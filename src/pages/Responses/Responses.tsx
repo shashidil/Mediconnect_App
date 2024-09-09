@@ -33,12 +33,7 @@ export const Responses: React.FC = () => {
     }
   }, [userId]);
 
-  // Function to remove a response from the list after successful order
-  const handleRemoveResponse = (invoiceNumber: number) => {
-    setResponsesData((prevData) =>
-      prevData.filter((response) => response.id !== invoiceNumber)
-    );
-  };
+
 
   const sortedResponses = Array.isArray(responsesData)
     ? responsesData.sort((a, b) => a.distance - b.distance || a.total - b.total)
@@ -66,7 +61,7 @@ export const Responses: React.FC = () => {
               key={index}
               data={data}
               buttonTexts={{ Order: "Order", Contact: "Contact" }}
-              onOrderSuccess={handleRemoveResponse} // Pass the removal handler to each ResponseCard
+            
             />
           ))}
         </Row>

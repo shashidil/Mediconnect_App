@@ -6,6 +6,7 @@ import { loginUser } from '../../services/api/UserAuthApi';
 import googleLogo from '../../assets/google.svg';
 import Logo from '../../assets/logo.png';
 import login from '../../assets/login.jpg';
+import { Link } from 'react-router-dom'; 
 import { MedicationReminder } from '../../services/MedicationReminder';
 
 export const UserLogin: React.FC = () => {
@@ -51,6 +52,8 @@ export const UserLogin: React.FC = () => {
     }
   };
 
+  
+
   return (
     <div style={{ textAlign: 'center', width: '1200px', margin: '0 auto', paddingTop: '60px' }}>
       <Row gutter={16} justify="center" align="middle">
@@ -90,7 +93,7 @@ export const UserLogin: React.FC = () => {
 
               <Row justify="space-between" style={{ width: '100%', marginTop: '-10px' }}>
                 <Col>
-                  <a style={{color:'#a79f9f',marginTop:'10px',position:'relative',marginLeft:'100px'}}  href="#">
+                  <a style={{color:'#a79f9f',marginTop:'10px',position:'relative',marginLeft:'100px'}}  href="/forgot-password">
                     Forgot Password?
                   </a>
                 </Col>
@@ -107,7 +110,7 @@ export const UserLogin: React.FC = () => {
               </Form.Item>
             </Form>
 
-            <Button
+            {/* <Button
               type="primary"
               style={{
                 width: '80%',
@@ -122,10 +125,10 @@ export const UserLogin: React.FC = () => {
             >
               <img style={{width:'20px',height:'20px',marginRight:'10px'}} src={googleLogo} alt="google login" />
               Continue with Google
-            </Button>
+            </Button> */}
 
             <div style={{ marginTop: '20px', color: '#a79f9f' }}>
-              Don't have an account? <a href="">Sign up</a>
+              Don't have an account? <Link to="/signup">Sign up</Link> 
             </div>
           </div>
         </Col>

@@ -6,6 +6,7 @@ import { Order } from '../../Interfaces/Order';
 import { ResponseData } from '../../Interfaces/ResposeData';
 import { updateOrder } from '../../services/api/OrderApi';
 import { GetInvoiceByInvoceNumber } from '../../services/api/InvoiceAPI';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -28,6 +29,8 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [invoiceData, setInvoiceData] = useState<ResponseData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleEditClick = (order: Order) => {
     setEditingOrder(order);
@@ -42,10 +45,7 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
     if (!editingOrder) return;
     setUpdateLoading(true);
     try {
-      // Make API call using the order number from the editingOrder object
-      
       await updateOrder(editingOrder.id, formValues);
-     
       notification.success({
         message: 'Success',
         description: `Order ${editingOrder.orderNumber} updated successfully.`,
@@ -62,20 +62,23 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
     }
   };
   
-
   const showInvoice = async (invoiceId: number) => {
     try {
       setLoading(true);
       const data = await GetInvoiceByInvoceNumber(invoiceId);
       console.log('Data from API:', data);
-      console.log(data.pharmacistName);
       setInvoiceData(data);
-      
       setIsModalVisible(true);
     } catch (error) {
       console.error('Failed to load invoice details', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleReorder = () => {
+    if (invoiceData) {
+      navigate('/patient/orders', { state: invoiceData }); 
     }
   };
 
@@ -144,7 +147,14 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
             View Details
           </Button>
           {isPharmacist && (
-            <Button type="primary" onClick={() => handleEditClick(record)}>
+            <Button
+              type="primary"
+              style={{
+                background: '#2e384d',
+                color: 'white',
+              }}
+              onClick={() => handleEditClick(record)}
+            >
               Edit
             </Button>
           )}
@@ -189,53 +199,57 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
       </Modal>
 
       <Modal
-  title="Invoice Details"
-  open={isModalVisible}
-  onCancel={() => setIsModalVisible(false)}
-  footer={[
-    <Button key="close" onClick={() => setIsModalVisible(false)}>
-      Close
-    </Button>,
-  ]}
-  width={800}
->
-  {loading ? (
-    <p>Loading...</p>
-  ) : invoiceData ? (  // Ensure invoiceData is not null
-    <>
-      <Title level={4}>Pharmacist: {invoiceData.pharmacistName}</Title>
-      <Title level={5}>Total Amount: ${invoiceData.total}</Title>
-      {invoiceData.medications && invoiceData.medications.length > 0 ? (
-        <List
-          header={<div>Medication Details</div>}
-          bordered
-          dataSource={invoiceData.medications}
-          renderItem={item => (
-            <List.Item>
-              <div>
-                <Text strong>Medication Name:</Text> {item.medicationName}
-              </div>
-              <div>
-                <Text strong>Dosage:</Text> {item.medicationDosage}
-              </div>
-              <div>
-                <Text strong>Quantity:</Text> {item.medicationQuantity}
-              </div>
-              <div>
-                <Text strong>Amount:</Text> ${item.amount}
-              </div>
-            </List.Item>
-          )}
-        />
-      ) : (
-        <p>No medications available for this invoice.</p>
-      )}
-    </>
-  ) : (
-    <p>No invoice data available.</p>  // Handle the case when invoiceData is not available
-  )}
-</Modal>
-
+        title="Invoice Details"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <Button key="close" onClick={() => setIsModalVisible(false)}>
+            Close
+          </Button>,
+          !isPharmacist && invoiceData && (
+            <Button key="reorder" type="primary" onClick={handleReorder}>
+              Re-order
+            </Button>
+          ), 
+        ]}
+        width={800}
+      >
+        {loading ? (
+          <p>Loading...</p>
+        ) : invoiceData ? (
+          <>
+            <Title level={4}>Pharmacist: {invoiceData.pharmacistName}</Title>
+            <Title level={5}>Total Amount: ${invoiceData.total}</Title>
+            {invoiceData.medications && invoiceData.medications.length > 0 ? (
+              <List
+                header={<div>Medication Details</div>}
+                bordered
+                dataSource={invoiceData.medications}
+                renderItem={item => (
+                  <List.Item>
+                    <div>
+                      <Text strong>Medication Name:</Text> {item.medicationName}
+                    </div>
+                    <div>
+                      <Text strong>Dosage:</Text> {item.medicationDosage}
+                    </div>
+                    <div>
+                      <Text strong>Quantity:</Text> {item.medicationQuantity}
+                    </div>
+                    <div>
+                      <Text strong>Amount:</Text> ${item.amount}
+                    </div>
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <p>No medications available for this invoice.</p>
+            )}
+          </>
+        ) : (
+          <p>No invoice data available.</p>
+        )}
+      </Modal>
     </>
   );
 };

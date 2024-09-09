@@ -10,10 +10,9 @@ import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 interface ResponseCardProps {
   data: ResponseData;
   buttonTexts?: { Order: string; Contact: string };
-  onOrderSuccess: (invoiceNumber: number) => void; // Prop to remove response on order success
 }
 
-export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts, onOrderSuccess }) => {
+export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts }) => {
   const orderText = buttonTexts?.Order || 'Order';
   const contactText = buttonTexts?.Contact || 'Contact';
   const [isMapModalVisible, setIsMapModalVisible] = useState(false);
@@ -33,7 +32,7 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts, o
   };
 
   const handleOrderClick = () => {
-    // Navigate to the orders page without passing onOrderSuccess in location.state
+  
     navigate('/patient/orders', { state: { ...data } });
   };
 
@@ -57,14 +56,18 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts, o
             <Button
               type="primary"
               onClick={handleOrderClick}
-              style={{ margin: '0 10px' }}
+              style={{ margin: '0 10px' ,background: '#2e384d', color: 'white',}}
             >
               {orderText}
             </Button>
             <Button
+            style={{
+              background: '#2e384d',
+              color: 'white',
+              margin: '0 10px'}}
               type="primary"
               onClick={handleContactClick}
-              style={{ margin: '0 10px' }}
+           
             >
               {contactText}
             </Button>
@@ -72,7 +75,7 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({ data, buttonTexts, o
         ]}
       >
         <Meta
-          title={data.pharmacistName} // Dynamic title
+          title={data.pharmacistName} 
           description={
             <div style={{ color: 'black' }}>
               <p>Price: {data.total}</p>

@@ -10,7 +10,7 @@ import PurchaseSuccess from '../../components/PaymentForm/PurchaseSuccess';
 
 const stripePromise = loadStripe('pk_test_51PlqqoBk6PYt3LyQFjp7Fgafw2HQtEYKLFw4BO5JbOhN5KMKM7BmWA9BUW3WENzPkq4NdiqaH6QKHGxWGNi7KbAL00XSGnPogD');
 
-const Orders = ({ onOrderSuccess }: { onOrderSuccess: (id: number) => void }) => {
+const Orders = () => {
   const [orderNumber, setOrderNumber] = useState('');
   const [isOrderCompleted, setIsOrderCompleted] = useState(false);
   const location = useLocation();
@@ -24,8 +24,7 @@ const Orders = ({ onOrderSuccess }: { onOrderSuccess: (id: number) => void }) =>
  
   const handleOrderCompletion = () => {
     setIsOrderCompleted(true);
-    // Trigger the callback to remove the response from the list
-    onOrderSuccess(data.id); // This will remove the response from the list in Responses
+
   };
   return (
     <>
@@ -57,10 +56,10 @@ const Orders = ({ onOrderSuccess }: { onOrderSuccess: (id: number) => void }) =>
 };
 
 
-const App = ({ onOrderSuccess }: { onOrderSuccess: (id: number) => void }) => {
+const App = () => {
   return (
     <Elements stripe={stripePromise}>
-     <Orders onOrderSuccess={onOrderSuccess} />
+     <Orders/>
     </Elements>
   );
 };

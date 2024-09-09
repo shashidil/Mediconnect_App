@@ -68,7 +68,7 @@ export const Settings: React.FC = () => {
 
     const handleFormSubmit = async (values: any) => {
 
-        setUpdateLoading(true); // Show spinner while updating
+        setUpdateLoading(true); 
         try {
             const userId = localStorage.getItem('userId');
             if (userId) {
@@ -85,11 +85,11 @@ export const Settings: React.FC = () => {
                 description: 'Failed to update user details. Please try again.',
             });
         } finally {
-            setUpdateLoading(false); // Hide spinner after updating
+            setUpdateLoading(false); 
         }
     };
     const handleStripeFormSubmit= async (values:any)=>{
-        setUpdateLoading(true); // Show spinner while updating
+        setUpdateLoading(true);
         try {
             const userId = localStorage.getItem('userId');
             if (userId) {
@@ -248,7 +248,11 @@ export const Settings: React.FC = () => {
                 <Row>
                     <Col span={24}>
                         <Form.Item style={{ textAlign: 'right' }}>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit" 
+                            style={{
+                                background: '#2e384d',
+                                color: 'white',}}
+                            >
                                 Update Details
                             </Button>
                         </Form.Item>

@@ -1,24 +1,41 @@
-import axios from 'axios';
+
 import axiosInstance from '../axiosInstance';
 import{UpdateOrderRequest} from '../../Interfaces/UpdateOrderRequest'
 
-export const processOrderPayment = async (
-  Id: number,
-  orderNumber: String,
-  pharmacistId: number,
-  customerId: number,
-  paymentMethod: string,
-  amount: number
-) => {
+interface ProcessOrderPaymentRequest {
+  invoiceId: number;
+  orderNumber: string;
+  pharmacistId: number;
+  customerId: number;
+  paymentMethod: string;
+  amount: number;
+}
+
+interface CreatePaymentIntentRequest {
+  amount: number;
+}
+
+// Create Payment Intent API Call
+export const createPaymentIntent = async (data: CreatePaymentIntentRequest) => {
   try {
-    const response = await axiosInstance.post('/api/orders/process-payment', null, {
-      params: {
-        Id,
-        orderNumber,
-        pharmacistId,
-        customerId,
-        paymentMethod,
-        amount,
+    const response = await axiosInstance.post('/api/orders/create-payment-intent', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to create payment intent', error);
+    throw error;
+  }
+};
+
+// Process Order Payment API Call
+export const processOrderPayment = async (paymentData: ProcessOrderPaymentRequest) => {
+  try {
+    const response = await axiosInstance.post('/api/orders/process-payment', paymentData, {
+      headers: {
+        'Content-Type': 'application/json',
       },
     });
     return response.data;
