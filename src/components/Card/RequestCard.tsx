@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import {Modal, Card, Button, Form, Input, notification, Space, Row, Col, Avatar, Tooltip} from 'antd';
+import { Modal, Card, Button, Form, Input, notification, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import {MessageOutlined, PlusOutlined,DownloadOutlined} from '@ant-design/icons';
+import { MessageOutlined, PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 import { SendInvoice } from '../../services/api/InvoiceAPI';
 
 export interface RequestData {
   id: number;
-  fileName: string;
-  filePath: string;
+  fileName: string | null;
+  filePath: string | null;
   user: {
     id: number;
     name: string;
     email: string;
   };
-  imageData: string;
+  imageData: string | null; // imageData can be null
+  medicationName: string | null; // medicationName from the backend
+  medicationQuantity: number | null; // medicationQuantity from the backend
 }
 
 interface Medication {
@@ -26,9 +28,10 @@ interface Medication {
 interface RequestCardProps {
   data: RequestData;
   buttonTexts?: { Order: string; Contact: string };
+  onInvoiceSuccess: (id: number) => void; // Callback to remove card on invoice success
 }
 
-export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) => {
+export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts, onInvoiceSuccess }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [isFinalInvoiceModalOpen, setIsFinalInvoiceModalOpen] = useState(false);
@@ -38,7 +41,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
   const navigate = useNavigate();
   const { Meta } = Card;
 
-  const base64String = `data:image/png;base64,${data.imageData}`;
+  const base64String = data.imageData ? `data:image/png;base64,${data.imageData}` : ''; // Use empty string if no image
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -65,15 +68,24 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
     form.resetFields(); // Reset the form fields
   };
 
-  const showFinalInvoiceModal = () => {
-    setIsFinalInvoiceModalOpen(true);
+  const handleContactClick = () => {
+    navigate('/pharmacist/chat', { state: { name: data.user.name, id: data.user.id } });
   };
 
-  const handleFinalInvoiceCancel = () => {
-    setIsFinalInvoiceModalOpen(false);
-    setMedications([]); // Reset the medications list when the modal is closed
+  const handleDownloadClick = (imageUrl: string) => {
+    if (!imageUrl) {
+      notification.error({ message: 'Error', description: 'No image available for download.' });
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'downloaded-image.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
+  // Add medication logic
   const addMedication = () => {
     form.validateFields().then(values => {
       const newMedication = {
@@ -89,10 +101,12 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
     });
   };
 
+  // Calculate total amount of medications
   const calculateTotal = () => {
     return medications.reduce((total, med) => total + med.amount, 0);
   };
 
+  // Submit invoice logic
   const onFinish = async () => {
     if (medications.length === 0) {
       notification.error({
@@ -102,18 +116,17 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
       return;
     }
 
-   
-
     try {
       const generateOrderNumber = () => `INV${Math.floor(1000 + Math.random() * 9000)}`;
-      setInvoiceNumber(generateOrderNumber);
+      const newInvoiceNumber = generateOrderNumber();
+      setInvoiceNumber(newInvoiceNumber);
       const pharmacistId = localStorage.getItem('userId');
       const formData = {
         medications,
         prescriptionId: data.id,
         pharmacistId: pharmacistId ? parseInt(pharmacistId, 10) : null,
         totalAmount: calculateTotal(),
-        invoiceNumber:invoiceNumber
+        invoiceNumber: newInvoiceNumber,
       };
 
       const response = await SendInvoice(formData);
@@ -122,10 +135,10 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
           message: 'Success',
           description: 'Invoice sent successfully',
         });
+        setIsFinalInvoiceModalOpen(false);
+        setMedications([]); // Reset medications after submitting the invoice
+        onInvoiceSuccess(data.id); // Remove the card from the list after success
       }
-
-      setIsFinalInvoiceModalOpen(false);
-      setMedications([]); // Reset medications after submitting the invoice
     } catch (error) {
       notification.error({
         message: 'Error',
@@ -134,67 +147,67 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
     }
   };
 
-  const handleContactClick = () => {
-    navigate('/pharmacist/chat', { state: { name: data.user.name, id: data.user.id } });
-  };
-
-  const handleDownloadClick = (imageUrl: string) => {
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'downloaded-image.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-
   return (
     <>
       <Card
-          style={{ width: 200, margin: 20}}
-          cover={
-            <div style={{position: 'relative'}}>
+        style={{ width: 200, margin: 20 }}
+        cover={
+          base64String ? (
+            // Render image if base64String is available
+            <div style={{ position: 'relative' }}>
               <img
-                  alt="example"
-                  src={base64String}
-                  style={{width: '100%', height: '200px', objectFit: 'cover',borderRadius:'7px 7px 0px 0px'}}
+                alt="example"
+                src={base64String}
+                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '7px 7px 0px 0px' }}
               />
               <Button
-                  type="primary"
-                  style={{
-                    position: 'absolute',
-                    bottom: 10,
-                    right: 10,
-                  }}
-                  onClick={showModal}
+                type="primary"
+                style={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 10,
+                }}
+                onClick={showModal}
               >
                 View
               </Button>
             </div>
-          }
-          actions={[
-            <Tooltip title="Send Message" key="message">
-              <MessageOutlined onClick={handleContactClick}/>
-
-            </Tooltip>,
-            <Tooltip title="Download" key="download">
-              <DownloadOutlined onClick={() => handleDownloadClick(base64String)}/>
-            </Tooltip>,
-            <Tooltip title="Add Medication" key="add">
-              <PlusOutlined onClick={showInvoiceModal}/>
-            </Tooltip>,
-          ]}
+          ) : (
+            // Render medicationName and medicationQuantity if no image is available
+            <div style={{ height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: '10px', textAlign: 'center', backgroundColor: '#f0f0f0', borderRadius: '7px 7px 0px 0px' }}>
+              <p style={{ fontSize: '16px', fontWeight: 'bold' }}>{data.medicationName || 'No Medication Name'}</p>
+              <p style={{ fontSize: '14px' }}>Quantity: {data.medicationQuantity || 'N/A'}</p>
+            </div>
+          )
+        }
+        actions={[
+          <Tooltip title="Send Message" key="message">
+            <MessageOutlined onClick={handleContactClick} />
+          </Tooltip>,
+          <Tooltip title="Download" key="download">
+            <DownloadOutlined onClick={() => handleDownloadClick(base64String)} />
+          </Tooltip>,
+          <Tooltip title="Add Medication" key="add">
+            <PlusOutlined onClick={showInvoiceModal} />
+          </Tooltip>,
+        ]}
       >
         <Meta
-            title={data.user.name}
-            description={data.user.email}
+          title={data.user.name}
+          description={data.user.email}
         />
       </Card>
 
+      {/* Modal for viewing the image */}
       <Modal title="User Image" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <img src={base64String} alt={data.fileName} style={{ width: '100%' }} />
+        {base64String ? (
+          <img src={base64String} alt={data.fileName || 'Image'} style={{ width: '100%' }} />
+        ) : (
+          <p>No image available to display.</p>
+        )}
       </Modal>
 
+      {/* Add Medication Modal */}
       <Modal title="Add Medication" open={isInvoiceModalOpen} onOk={handleInvoiceOk} onCancel={handleInvoiceCancel} footer={null}>
         <Form layout="vertical" form={form}>
           <Form.Item
@@ -214,7 +227,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
           <Form.Item
             label="Days"
             name="days"
-            rules={[{ required: true, message: 'Please day the medication dosage!' }]}
+            rules={[{ required: true, message: 'Please input the number of days!' }]}
           >
             <Input />
           </Form.Item>
@@ -238,12 +251,13 @@ export const RequestCard: React.FC<RequestCardProps> = ({ data, buttonTexts }) =
             </Button>
           </Form.Item>
         </Form>
-        <Button type="primary" onClick={showFinalInvoiceModal} block>
+        <Button type="primary" onClick={() => setIsFinalInvoiceModalOpen(true)} block>
           View Final Invoice
         </Button>
       </Modal>
 
-      <Modal title="Final Invoice" open={isFinalInvoiceModalOpen} onCancel={handleFinalInvoiceCancel} footer={null}>
+      {/* Final Invoice Modal */}
+      <Modal title="Final Invoice" open={isFinalInvoiceModalOpen} onCancel={() => setIsFinalInvoiceModalOpen(false)} footer={null}>
         <h3>Final Invoice</h3>
         {medications.length > 0 ? (
           <>

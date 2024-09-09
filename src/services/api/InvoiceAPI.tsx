@@ -26,9 +26,9 @@ export const SendInvoice = async (formData: any) => {
       throw error;
     }
   };
-  export const GetInvoiceByInvoceNumber = async (invoiceNumber: string) => {
+  export const GetInvoiceByInvoceNumber = async (invoiceId: number) => {
     try {
-      const response = await axiosInstance.get(`/api/invoices/number/${invoiceNumber}`);
+      const response = await axiosInstance.get(`/api/invoices/number/${invoiceId}`);
       return response.data;
     } catch (error: any) {
       console.error("Error fetching invoices:", error);

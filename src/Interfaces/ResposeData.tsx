@@ -9,6 +9,7 @@ export interface ResponseData {
     distance: number;
     total: number;
     pharmacistId:number;
+    prescriptionId:number;
     pharmacistLatitude: number;
     pharmacistLongitude: number;
     customerLatitude: number;

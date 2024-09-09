@@ -4,9 +4,9 @@ import {BASE_URL} from "../../Constants/Index";
 import axiosInstance from '../axiosInstance';
 
 
-interface PharmacistIdRequest {
-  PharmacistId: number[];
-  }
+// interface PharmacistIdRequest {
+//   PharmacistId: number[];
+//   }
 
   export const fetchPharmacistsByCity = async (city: string) => {
     try {
@@ -58,4 +58,23 @@ interface PharmacistIdRequest {
     }
   };
 
+  export const inquireMedicine = async (userId: number, medicationName: string, medicationQuantity: number, pharmacistIds: number[]) => {
+    const medicineUploadRequest = {
+      prescriptionRequest: {
+        medicationName,
+        medicationQuantity
+      },
+      pharmacistIdRequest: {
+        pharmacistId: pharmacistIds
+      }
+    };
+  
+    try {
+      const response = await axiosInstance.post(`/api/medicine-requests/uploadMedicine/${userId}`, medicineUploadRequest);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to inquire medicine', error);
+      throw error;
+    }
+  };
 

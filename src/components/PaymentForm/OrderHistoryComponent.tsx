@@ -63,11 +63,14 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
   };
   
 
-  const showInvoice = async (invoiceNumber: string) => {
+  const showInvoice = async (invoiceId: number) => {
     try {
       setLoading(true);
-      const data = await GetInvoiceByInvoceNumber(invoiceNumber);
+      const data = await GetInvoiceByInvoceNumber(invoiceId);
+      console.log('Data from API:', data);
+      console.log(data.pharmacistName);
       setInvoiceData(data);
+      
       setIsModalVisible(true);
     } catch (error) {
       console.error('Failed to load invoice details', error);
@@ -137,7 +140,7 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
       key: 'actions',
       render: (_: any, record: Order) => (
         <Space size="middle">
-          <Button type="default" onClick={() => showInvoice(record.invoiceNumber)}>
+          <Button type="default" onClick={() => showInvoice(record.id)}>
             View Details
           </Button>
           {isPharmacist && (
@@ -186,52 +189,53 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
       </Modal>
 
       <Modal
-        title="Invoice Details"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={[
-          <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Close
-          </Button>,
-        ]}
-        width={800}
-      >
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          invoiceData && (
-            <>
-              <Title level={4}>Pharmacist: {invoiceData.pharmacistName}</Title>
-              <Title level={5}>Total Amount: ${invoiceData.total}</Title>
-              {invoiceData.medications && invoiceData.medications.length > 0 ? (
-                <List
-                  header={<div>Medication Details</div>}
-                  bordered
-                  dataSource={invoiceData.medications}
-                  renderItem={item => (
-                    <List.Item>
-                      <div>
-                        <Text strong>Medication Name:</Text> {item.medicationName}
-                      </div>
-                      <div>
-                        <Text strong>Dosage:</Text> {item.medicationDosage}
-                      </div>
-                      <div>
-                        <Text strong>Quantity:</Text> {item.medicationQuantity}
-                      </div>
-                      <div>
-                        <Text strong>Amount:</Text> ${item.amount}
-                      </div>
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                <p>No medications available for this invoice.</p>
-              )}
-            </>
-          )
-        )}
-      </Modal>
+  title="Invoice Details"
+  open={isModalVisible}
+  onCancel={() => setIsModalVisible(false)}
+  footer={[
+    <Button key="close" onClick={() => setIsModalVisible(false)}>
+      Close
+    </Button>,
+  ]}
+  width={800}
+>
+  {loading ? (
+    <p>Loading...</p>
+  ) : invoiceData ? (  // Ensure invoiceData is not null
+    <>
+      <Title level={4}>Pharmacist: {invoiceData.pharmacistName}</Title>
+      <Title level={5}>Total Amount: ${invoiceData.total}</Title>
+      {invoiceData.medications && invoiceData.medications.length > 0 ? (
+        <List
+          header={<div>Medication Details</div>}
+          bordered
+          dataSource={invoiceData.medications}
+          renderItem={item => (
+            <List.Item>
+              <div>
+                <Text strong>Medication Name:</Text> {item.medicationName}
+              </div>
+              <div>
+                <Text strong>Dosage:</Text> {item.medicationDosage}
+              </div>
+              <div>
+                <Text strong>Quantity:</Text> {item.medicationQuantity}
+              </div>
+              <div>
+                <Text strong>Amount:</Text> ${item.amount}
+              </div>
+            </List.Item>
+          )}
+        />
+      ) : (
+        <p>No medications available for this invoice.</p>
+      )}
+    </>
+  ) : (
+    <p>No invoice data available.</p>  // Handle the case when invoiceData is not available
+  )}
+</Modal>
+
     </>
   );
 };
