@@ -26,10 +26,8 @@ export const UploadPrescription: React.FC = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [userId, setUserId] = useState<number | null>(null);
     const [notifications, setNotifications] = useState([]);
-    const isEffectRan = useRef(false); // Add a ref to track effect runs
-
+    const isEffectRan = useRef(false); 
     useEffect(() => {
-        // Prevent the effect from running more than once
         if (isEffectRan.current) return;
         isEffectRan.current = true;
 
@@ -117,7 +115,7 @@ export const UploadPrescription: React.FC = () => {
                 return Upload.LIST_IGNORE;
             }
             setFile(file);
-            return false; // Prevent automatic upload by Ant Design
+            return false; 
         },
         onRemove: () => {
             setFile(null);

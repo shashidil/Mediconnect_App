@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, Input, Button, Typography } from 'antd';
 import WebSocketService from '../../services/api/WebSocketService';
 
@@ -12,7 +12,22 @@ interface ChatWindowProps {
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
   const [message, setMessage] = useState('');
+  const [receivedMessages, setReceivedMessages] = useState(messages); // Store received messages
   const loggedInUserId = parseInt(localStorage.getItem('userId') || '0', 10);
+
+  useEffect(() => {
+    // Establish WebSocket connection when the component mounts
+    WebSocketService.connect((msg) => {
+      const newMessage = JSON.parse(msg.body);
+      console.log("New message received:", newMessage);  
+      setReceivedMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    // Cleanup WebSocket connection when the component unmounts
+    return () => {
+      WebSocketService.disconnect();
+    };
+  }, []);
 
   const handleSendMessage = () => {
     const chatMessage = {
@@ -21,7 +36,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
       content: message,
     };
     WebSocketService.sendMessage('/app/chat.sendMessage', chatMessage);
-    setMessage('');
+    setMessage(''); 
   };
 
   return (
@@ -32,12 +47,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
           flexGrow: 1,
           padding: '16px',
           backgroundColor: '#f0f0f0',
-          overflowY: 'auto',  // Enables vertical scrolling
-          maxHeight: '70vh',  // Limit the height of the chat window
+          overflowY: 'auto',
+          maxHeight: '70vh',
         }}
       >
         <List
-          dataSource={messages}
+          dataSource={receivedMessages} // Use the receivedMessages state for rendering
           renderItem={(msg) => (
             <List.Item
               style={{

@@ -41,7 +41,7 @@ export const UserLogin: React.FC = () => {
       } else {
         notification.error({
           message: 'Error',
-          description: 'User Login Failed',
+          description: 'Username or Password Incorrect',
         });
       }
     } catch (error) {

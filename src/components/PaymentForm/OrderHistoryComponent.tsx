@@ -30,7 +30,7 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
   const [invoiceData, setInvoiceData] = useState<ResponseData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); 
 
   const handleEditClick = (order: Order) => {
     setEditingOrder(order);
@@ -80,6 +80,11 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
     if (invoiceData) {
       navigate('/patient/orders', { state: invoiceData }); 
     }
+  };
+
+  const handleTrackOrder = (trackingNumber: string) => {
+    const trackingUrl = `https://track24.net/service/lkpost/tracking/${trackingNumber}`;
+    window.open(trackingUrl, '_blank'); 
   };
 
   const columns: ColumnsType<Order> = [
@@ -146,7 +151,12 @@ const OrderHistoryComponent: React.FC<OrderHistoryComponentProps> = ({ orders, r
           <Button type="default" onClick={() => showInvoice(record.id)}>
             View Details
           </Button>
-          {isPharmacist && (
+          {!isPharmacist && record.trackingNumber && (
+            <Button type="primary" onClick={() => handleTrackOrder(record.trackingNumber||'0')}>
+              Track
+            </Button>
+          )}
+          {isPharmacist && ( 
             <Button
               type="primary"
               style={{

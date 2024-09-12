@@ -1,15 +1,17 @@
 import { Client, Message } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
 
 class WebSocketService {
   private client: Client;
+  private userId: string | null = localStorage.getItem('userId');
 
   constructor() {
     this.client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+      brokerURL: `ws://localhost:8080/ws${this.userId ? `?userId=${this.userId}` : ""}`, // Append userId if present
       reconnectDelay: 5000,
       debug: (str) => console.log(str),
     });
+    console.log("WebSocket URL:", `ws://localhost:8080/ws${this.userId ? `?userId=${this.userId}` : ""}`);
+
   }
 
   connect(onMessageReceived: (msg: Message) => void) {
@@ -25,10 +27,11 @@ class WebSocketService {
 
   disconnect() {
     if (this.client.connected) {
-      this.client.deactivate(); // This will close the WebSocket connection
+      this.client.deactivate();
     }
   }
-
 }
 
 export default new WebSocketService();
+
+
